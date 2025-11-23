@@ -1,0 +1,152 @@
+master:
+  dataset: "dataset_evaluation/dataset_validated_20251122_145227.xlsx"
+  mode: "retrieval"
+  top_k: 5
+  device: "gpu"
+  pdf_dir: "docs/"
+
+experiments:
+
+  # =====================================================
+  # FIXED-SIZE CHUNKING (400 tokens, overlap 80 tokens)
+  # =====================================================
+
+  - id: FIX400_BGE_M3
+    active: true
+    chunking:
+      type: fixed
+      size: 400
+      overlap: 80
+    embedding:
+      model: "models/embedding/bge-m3"
+
+  - id: FIX400_SNOWFLAKE
+    active: true
+    chunking:
+      type: fixed
+      size: 400
+      overlap: 80
+    embedding:
+      model: "models/embedding/snowflake-arctic-embed-l-v2.0"
+
+  - id: FIX400_GEMMA300M
+    active: true
+    chunking:
+      type: fixed
+      size: 400
+      overlap: 80
+    embedding:
+      model: "models/embedding/embeddinggemma-300m"
+
+  - id: FIX400_GTE
+    active: true
+    chunking:
+      type: fixed
+      size: 400
+      overlap: 80
+    embedding:
+      model: "models/embedding/gte-multilingual-base"
+
+  - id: FIX400_E5
+    active: true
+    chunking:
+      type: fixed
+      size: 400
+      overlap: 80
+    embedding:
+      model: "models/embedding/multilingual-e5-base"
+
+
+  # =====================================================
+  # SENTENCE-BASED CHUNKING
+  # =====================================================
+
+  - id: SENT_BGE_M3
+    active: true
+    chunking:
+      type: sentence
+      window: 400
+      overlap: 80
+    embedding:
+      model: "models/embedding/bge-m3"
+
+  - id: SENT_SNOWFLAKE
+    active: true
+    chunking:
+      type: sentence
+      window: 400
+      overlap: 80
+    embedding:
+      model: "models/embedding/snowflake-arctic-embed-l-v2.0"
+
+  - id: SENT_GEMMA300M
+    active: true
+    chunking:
+      type: sentence
+      window: 400
+      overlap: 80
+    embedding:
+      model: "models/embedding/embeddinggemma-300m"
+
+  - id: SENT_GTE
+    active: true
+    chunking:
+      type: sentence
+      window: 400
+      overlap: 80
+    embedding:
+      model: "models/embedding/gte-multilingual-base"
+
+  - id: SENT_E5
+    active: true
+    chunking:
+      type: sentence
+      window: 400
+      overlap: 80
+    embedding:
+      model: "models/embedding/multilingual-e5-base"
+
+
+  # =====================================================
+  # SEMANTIC CHUNKING
+  # =====================================================
+
+  - id: SEM_BGE_M3
+    active: true
+    chunking:
+      type: semantic
+      threshold: 0.85
+    embedding:
+      model: "models/embedding/bge-m3"
+
+  - id: SEM_SNOWFLAKE
+    active: true
+    chunking:
+      type: semantic
+      threshold: 0.85
+    embedding:
+      model: "models/embedding/snowflake-arctic-embed-l-v2.0"
+
+  - id: SEM_GEMMA300M
+    active: true
+    chunking:
+      type: semantic
+      threshold: 0.85
+    embedding:
+      model: "models/embedding/embeddinggemma-300m"
+
+  - id: SEM_GTE
+    active: true
+    chunking:
+      type: semantic
+      threshold: 0.85
+    embedding:
+      model: "models/embedding/gte-multilingual-base"
+
+  - id: SEM_E5
+    active: true
+    chunking:
+      type: semantic
+      threshold: 0.85
+    embedding:
+      model: "models/embedding/multilingual-e5-base"
