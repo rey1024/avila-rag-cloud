@@ -49,3 +49,7 @@ vavilarag/
 # =========================================
 .DS_Store
 Thumbs.db
+
+
+old/
+old/*
