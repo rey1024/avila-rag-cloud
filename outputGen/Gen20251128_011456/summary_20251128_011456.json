@@ -1,0 +1,14 @@
+{
+  "GEN_GPT4o": {
+    "status": "ok",
+    "output_dir": "outputGen/Gen20251128_011456/GEN_GPT4o_20251128_011456",
+    "excel": "outputGen/Gen20251128_011456/GEN_GPT4o_20251128_011456/GEN_GPT4o_20251128_011456.xlsx",
+    "scores": {
+      "context_precision": 0.99999999995,
+      "context_recall": 1.0,
+      "answer_relevancy": 0.8221952527338833,
+      "faithfulness": 0.5,
+      "answer_correctness": 0.9999997948708845
+    }
+  }
+}

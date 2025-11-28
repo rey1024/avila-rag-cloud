@@ -1,0 +1,14 @@
+{
+  "GEN_GPT4oMiini": {
+    "status": "ok",
+    "output_dir": "outputGen/Gen20251127_081332/GEN_GPT4oMiini_20251127_081332",
+    "excel": "outputGen/Gen20251127_081332/GEN_GPT4oMiini_20251127_081332/GEN_GPT4oMiini_20251127_081332.xlsx",
+    "scores": {
+      "context_precision": 0.98,
+      "context_recall": 0.93,
+      "answer_relevancy": 0.53,
+      "faithfulness": 0.7,
+      "answer_correctness": 0.6
+    }
+  }
+}

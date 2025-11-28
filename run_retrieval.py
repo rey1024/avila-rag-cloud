@@ -7,6 +7,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import seaborn as sns
+import json
 
 from pathlib import Path
 from datetime import datetime
@@ -17,6 +18,106 @@ import nltk
 nltk.download('punkt')
 nltk.download('punkt_tab')
 stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+from dotenv import load_dotenv
+load_dotenv()
+import os
+
+
+# ================================================
+# BLOOM LEVEL CLASSIFIER  (GPT 4o mini)
+# ================================================
+from openai import OpenAI
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+def classify_bloom_gpt(paragraph):
+    prompt = f"""
+    Klasifikasikan paragraf berikut ke salah satu level Taksonomi Bloom:
+    Remember, Understand, Apply, Analyze, Evaluate, Create.
+    Jawab hanya satu kata.
+    
+    Paragraf:
+    {paragraph}
+    """
+    
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0
+        )
+        label = response.choices[0].message['content'].strip().lower()
+    except:
+        label = "remember"
+
+    mapping = {
+        "remember": "Remember",
+        "understand": "Understand",
+        "apply": "Apply",
+        "analyze": "Analyze",
+        "evaluate": "Evaluate",
+        "create": "Create"
+    }
+
+    return mapping.get(label, "Remember")
+
+
+# ================================================
+# BLOOM-AWARE CHUNKING
+# ================================================
+def bloom_aware_chunk(text, min_tokens=40, max_tokens=280):
+    paragraphs = [p.strip() for p in text.split("\n") if len(p.strip()) > 0]
+    total = len(paragraphs)
+
+    print(f"[BloomChunk] Total paragraf: {total}")
+
+    bloom_buckets = {
+        "Remember": [], "Understand": [], "Apply": [],
+        "Analyze": [], "Evaluate": [], "Create": []
+    }
+
+    for i, p in enumerate(paragraphs, start=1):
+        print(f"[BloomChunk] {i}/{total} → klasifikasi...", end="\r")
+
+        try:
+            label = classify_bloom_gpt(p)
+        except:
+            label = "Remember"
+
+        token_len = len(p.split())
+
+        if token_len > max_tokens:
+            mid = len(p)//2
+            bloom_buckets[label].append(p[:mid])
+            bloom_buckets[label].append(p[mid:])
+        else:
+            bloom_buckets[label].append(p)
+
+    print("\n[BloomChunk] Klasifikasi selesai. Menyusun chunk Bloom...")
+
+    # gabungkan chunk berdasarkan level bloom
+    final_chunks = []
+    final_metadata = []
+
+    chunk_id = 1
+    for bloom_level, paras in bloom_buckets.items():
+        if len(paras) == 0:
+            continue
+
+        chunk_text = "\n".join(paras)
+        final_chunks.append(chunk_text)
+
+        meta = {
+            "chunk_id": chunk_id,
+            "bloom_level": bloom_level,
+            "paragraph_count": len(paras),
+            "tokens": len(chunk_text.split()),
+            "text_preview": chunk_text[:200]
+        }
+        final_metadata.append(meta)
+        chunk_id += 1
+
+    return final_chunks, final_metadata
+
 # ================================================
 # LOAD PDF/DOCX
 # ================================================
@@ -48,8 +149,13 @@ def load_pdf_docx(folder):
 def format_decimal(ws):
     for row in ws.iter_rows():
         for cell in row:
-            if isinstance(cell.value, (int, float)):
+            try:
+                # Coba konversi ke float
+                val = float(cell.value)
                 cell.number_format = "0.00"
+            except:
+                pass
+
 
 
 # ================================================
@@ -144,21 +250,35 @@ def semantic_chunk_langchain(text, embedder,
 
 
 def chunk_text(text, cfg, embedder=None):
+    # FIXED
     if cfg["type"] == "fixed":
-        return fixed_chunk(text, cfg["size"], cfg["overlap"])
+        chunks = fixed_chunk(text, cfg["size"], cfg["overlap"])
+        return chunks, None
 
+    # SENTENCE
     if cfg["type"] == "sentence":
-        return fixed_chunk(text, cfg["window"], cfg["overlap"])
+        chunks = fixed_chunk(text, cfg["window"], cfg["overlap"])
+        return chunks, None
 
+    # SEMANTIC
     if cfg["type"] == "semantic":
-        return semantic_chunk_langchain(
+        chunks = semantic_chunk_langchain(
             text,
             embedder,
             min_chunk_size=cfg.get("min_chunk_size", 150),
             max_chunk_size=cfg.get("max_chunk_size", 450),
             similarity_threshold=cfg.get("threshold", 0.75),
         )
+        return chunks, None
 
+    # BLOOM LLM
+    if cfg["type"] == "bloom_llm":
+        chunks, metadata = bloom_aware_chunk(
+            text,
+            min_tokens=cfg.get("min_chunk_size", 40),
+            max_tokens=cfg.get("max_chunk_size", 280)
+        )
+        return chunks, metadata
 
     raise ValueError("Unknown chunking method")
 
@@ -287,7 +407,7 @@ def text_hit_match(gt_text, retrieved_chunks, chunk_embs, gt_emb,
 # RETRIEVAL PIPELINE (FINAL VERSION)
 # ======================================================
 
-def run_retrieval(exp, master, df):
+def run_retrieval(exp, master, df, out_dir):
     print(f"\n=== Running experiment {exp['id']} ===")
 
     embedder = SentenceTransformer(
@@ -297,7 +417,16 @@ def run_retrieval(exp, master, df):
     )
 
     corpus_text = load_pdf_docx(master["pdf_dir"])
-    chunks = chunk_text(corpus_text, exp["chunking"], embedder)
+    #chunks = chunk_text(corpus_text, exp["chunking"], embedder)
+    chunks, bloom_metadata = chunk_text(corpus_text, exp["chunking"], embedder)
+  
+
+    # save bloom metadata if exists
+    if bloom_metadata is not None:
+        with open(f"{out_dir}/chunk_bloom_metadata.jsonl", "w", encoding="utf-8") as f:
+            for m in bloom_metadata:
+                f.write(json.dumps(m, ensure_ascii=False) + "\n")
+
     print("Chunks:", len(chunks))
 
     chunk_embs = embedder.encode(chunks, normalize_embeddings=True, batch_size=4)
@@ -459,7 +588,8 @@ def run_retrieval(exp, master, df):
         bloom_summary = pd.DataFrame()  # fallback if missing
 
     #return df_res, chunks, summary, full_sim_matrix
-    return df_res, chunks, summary, bloom_summary, full_sim_matrix
+    return df_res, chunks, summary, bloom_summary, full_sim_matrix, index, chunk_embs
+
 
 
 
@@ -546,7 +676,56 @@ def save_excel(exp_id, out_dir, df_res, chunks, summary, bloom_summary, heatmap_
 
     print("✔ Excel saved:", excel_path)
 
+# ======================================================
+# SAVE FAISS + EMBEDDINGS + CHUNKS
+# ======================================================
+def save_faiss_and_metadata(out_dir, exp_id, index, chunk_embs, chunks):
+    # Folder khusus FAISS
+    faiss_dir = f"{out_dir}/faiss"
+    os.makedirs(faiss_dir, exist_ok=True)
 
+    # Save FAISS index
+    faiss_path = f"{faiss_dir}/index.faiss"
+    faiss.write_index(index, faiss_path)
+
+    # Save embeddings
+    emb_path = f"{faiss_dir}/chunk_embs.npy"
+    np.save(emb_path, chunk_embs)
+
+    # Save chunk texts (jsonl)
+    chunks_path = f"{faiss_dir}/chunks.jsonl"
+    with open(chunks_path, "w", encoding="utf8") as f:
+        for i, ch in enumerate(chunks, start=1):
+            rec = {"chunk_id": i, "text": ch}
+            f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+
+    print("✔ FAISS index saved:", faiss_path)
+    print("✔ Embeddings saved:", emb_path)
+    print("✔ Chunks saved:", chunks_path)
+
+import ast
+
+import ast
+
+def flatten_context(x):
+    try:
+        d = ast.literal_eval(x)
+    except:
+        return x  # bukan dictionary / parsing gagal
+
+    # recursive flatten
+    def extract_values(obj):
+        if isinstance(obj, dict):
+            values = []
+            for v in obj.values():
+                values.append(extract_values(v))
+            return " ".join(values)
+        elif isinstance(obj, list):
+            return " ".join(extract_values(i) for i in obj)
+        else:
+            return str(obj).strip()
+
+    return extract_values(d)
 
 # ================================================
 # MAIN
@@ -558,6 +737,9 @@ def main():
     all_bloom = []
 
     df = pd.read_excel(master["dataset"])
+    df["context"] = df["context"].astype(str).apply(flatten_context)
+
+
     ensure_dir("outputsRetrieval")
 
     global_summary = {}
@@ -569,13 +751,17 @@ def main():
         exp_id = exp["id"]
         out_dir = auto_out(exp_id)
 
-        df_res, chunks, summary, bloom_summary, sim_matrix = run_retrieval(exp, master, df)
+        df_res, chunks, summary, bloom_summary, sim_matrix, index, chunk_embs = run_retrieval(exp, master, df, out_dir)
+
         global_summary[exp_id] = summary
         bloom_summary["experiment_id"] = exp_id
         all_bloom.append(bloom_summary)
         heatmap_path = plot_heatmap(sim_matrix, out_dir, exp_id)
         scatter_path = plot_scatter_rank_similarity(df_res, out_dir)
-    
+        # Save FAISS + embeddings + chunk metadata
+        
+        save_faiss_and_metadata(out_dir, exp_id, index, chunk_embs, chunks)
+
 
         save_excel(exp_id, out_dir, df_res, chunks, summary, bloom_summary, heatmap_path, scatter_path)
 

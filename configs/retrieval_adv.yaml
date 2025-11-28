@@ -1,0 +1,158 @@
+master:
+  dataset: "dataset_evaluation/validation_20251124_101649.xlsx"
+  mode: "retrieval_adv"
+  top_k: 5
+  device: "gpu"
+  pdf_dir: "docs/"
+  llm_model: "gemma:7b-instruct"
+
+experiments:
+
+  # =====================================================
+  # BASELINE (FAISS ONLY)
+  # =====================================================
+
+  - id: ADV_FAISS_FIX400_E5
+    active: true
+    chunking:
+      type: fixed
+      size: 400
+      overlap: 80
+    embedding:
+      model: "models/embedding/multilingual-e5-base"
+    retrieval:
+      engine: "faiss"
+      query_expansion: "none"
+
+  - id: ADV_FAISS_SEM_E5
+    active: true
+    chunking:
+      type: semantic
+      threshold: 0.75
+      min_chunk_size: 150
+      max_chunk_size: 450
+    embedding:
+      model: "models/embedding/multilingual-e5-base"
+    retrieval:
+      engine: "faiss"
+      query_expansion: "none"
+
+
+  # =====================================================
+  # BM25 ONLY (SPARSE BASELINE)
+  # =====================================================
+
+  - id: ADV_BM25_FIX400_E5
+    active: true
+    chunking:
+      type: fixed
+      size: 400
+      overlap: 80
+    embedding:
+      model: "models/embedding/multilingual-e5-base"
+    retrieval:
+      engine: "bm25"
+      query_expansion: "none"
+
+  - id: ADV_BM25_SEM_E5
+    active: true
+    chunking:
+      type: semantic
+      threshold: 0.75
+      min_chunk_size: 150
+      max_chunk_size: 450
+    embedding:
+      model: "models/embedding/multilingual-e5-base"
+    retrieval:
+      engine: "bm25"
+      query_expansion: "none"
+
+
+  # =====================================================
+  # HYBRID RETRIEVAL (FAISS + BM25 via RRF)
+  # =====================================================
+
+  - id: ADV_HYBRID_RRF_FIX400_E5
+    active: true
+    chunking:
+      type: fixed
+      size: 400
+      overlap: 80
+    embedding:
+      model: "models/embedding/multilingual-e5-base"
+    retrieval:
+      engine: "hybrid_rrf"
+      query_expansion: "none"
+
+  - id: ADV_HYBRID_RRF_SEM_E5
+    active: true
+    chunking:
+      type: semantic
+      threshold: 0.75
+      min_chunk_size: 150
+      max_chunk_size: 450
+    embedding:
+      model: "models/embedding/multilingual-e5-base"
+    retrieval:
+      engine: "hybrid_rrf"
+      query_expansion: "none"
+
+
+  # =====================================================
+  # QUERY EXPANSION (LLM-REWRITE)
+  # =====================================================
+
+  - id: ADV_FAISS_QE_FIX400_E5
+    active: true
+    chunking:
+      type: fixed
+      size: 400
+      overlap: 80
+    embedding:
+      model: "models/embedding/multilingual-e5-base"
+    retrieval:
+      engine: "faiss"
+      query_expansion: "llm_rewrite"
+
+  - id: ADV_FAISS_QE_SEM_E5
+    active: true
+    chunking:
+      type: semantic
+      threshold: 0.75
+      min_chunk_size: 150
+      max_chunk_size: 450
+    embedding:
+      model: "models/embedding/multilingual-e5-base"
+    retrieval:
+      engine: "faiss"
+      query_expansion: "llm_rewrite"
+
+
+  # =====================================================
+  # HYBRID RRF + EXPANSION  (FULL CONFIG)
+  # =====================================================
+
+  - id: ADV_FULL_FIX400_E5
+    active: true
+    chunking:
+      type: fixed
+      size: 400
+      overlap: 80
+    embedding:
+      model: "models/embedding/multilingual-e5-base"
+    retrieval:
+      engine: "hybrid_rrf"
+      query_expansion: "llm_rewrite"
+
+  - id: ADV_FULL_SEM_E5
+    active: true
+    chunking:
+      type: semantic
+      threshold: 0.75
+      min_chunk_size: 150
+      max_chunk_size: 450
+    embedding:
+      model: "models/embedding/multilingual-e5-base"
+    retrieval:
+      engine: "hybrid_rrf"
+      query_expansion: "llm_rewrite"

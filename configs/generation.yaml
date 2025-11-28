@@ -1,0 +1,62 @@
+master:
+  dataset: "dataset_evaluation/validation_20251124_101649.xlsx"
+  mode: "generation"
+  faiss_index_dir: "outputsRetrieval/20251125_083908/SEM_E5_20251125_083908/faiss"
+  top_k: 10
+  device: "cuda"
+  pdf_dir: "docs/"
+  evaluation:
+    ragas: true
+    metrics:
+      - answer_correctness
+      - faithfulness
+      - context_precision
+      - context_recall
+
+experiments:
+  # =====================================================
+  # GPT 
+  # =====================================================
+  - id: GEN_GPT4oMini
+    active: true
+    llm:
+      provider: "openai"
+      model: "gpt-4o-mini"
+      max_tokens: 512
+      temperature: 0
+      top_p: 0
+  # =====================================================
+  # GEMMA 7B INSTRUCT
+  # =====================================================
+  - id: GEN_GEMMA_7B
+    active: false
+    llm:
+      provider: "ollama"
+      model: "gemma:7b-instruct"
+      max_tokens: 512
+      temperature: 0.3
+      top_p: 0.9
+
+  # =====================================================
+  # LLAMA 2 CHAT (sementara, karena LLaMA-3 belum ada)
+  # =====================================================
+  - id: GEN_LLAMA2_CHAT
+    active: false
+    llm:
+      provider: "ollama"
+      model: "llama2:chat"
+      max_tokens: 512
+      temperature: 0.3
+      top_p: 0.9
+
+  # =====================================================
+  # PHI 3 MEDIUM
+  # =====================================================
+  - id: GEN_PHI3_MEDIUM
+    active: false
+    llm:
+      provider: "ollama"
+      model: "phi3:medium"
+      max_tokens: 512
+      temperature: 0.3
+      top_p: 0.9
