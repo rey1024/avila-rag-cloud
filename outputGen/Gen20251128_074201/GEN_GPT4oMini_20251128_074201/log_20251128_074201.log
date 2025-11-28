@@ -1,0 +1,40 @@
+2025-11-28 07:42:01 - INFO - === Menjalankan GEN_GPT4oMini ===
+2025-11-28 07:42:01 - INFO - ✔ FAISS index loaded: outputsRetrieval/20251125_083908/SEM_E5_20251125_083908/faiss/index.faiss
+2025-11-28 07:42:01 - INFO - ✔ Chunks loaded: 97 chunks available
+2025-11-28 07:42:01 - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-11-28 07:42:05 - INFO - ✔ Dataset loaded from: dataset_evaluation/validation_20251124_101649.xlsx (items=1)
+2025-11-28 07:42:05 - INFO - ✔ LLM setup -> provider: openai, model: gpt-4o-mini, endpoint: http://localhost:11434, mode: OpenAI/ChatOpenAI
+2025-11-28 07:42:05 - INFO - • Pre-encoding all chunks for diagnostics...
+2025-11-28 07:42:23 - INFO - ✔ Pre-encoding done
+2025-11-28 07:42:23 - INFO - Mulai proses 1 item...
+2025-11-28 07:42:23 - INFO - Penjelasan: LOOP 1 = retrieval + diagnostics (tidak ada pemanggilan LLM).
+2025-11-28 07:42:44 - INFO -     - question: type=str, size=56, preview=Siapa yang disebut sebagai desainer...
+2025-11-28 07:42:44 - INFO -     - groundtruth_answer: type=str, size=149, preview=Seorang desainer pengalaman pengguna adalah...
+2025-11-28 07:42:44 - INFO -     - groundtruth_context: type=str, size=3392, preview=Kompleksitas dan Persepsi Desain pengalaman...
+2025-11-28 07:42:44 - INFO -     - faiss_top10: type=list, size=10, preview=['Kompleksitas dan Persepsi Desain pengalaman...', 'Prototipe Wizard of Oz bermanfaat...', 'Pendekatan ini meningkatkan peluang keberhasilan...']
+2025-11-28 07:42:44 - INFO -     - retrieved_after_rerank: type=list, size=2, preview=['Kompleksitas dan Persepsi Desain pengalaman...', 'Tokoh besar dalam bidang pengalaman...']
+2025-11-28 07:42:44 - INFO -     - retrieved_ids: type=list, size=2, preview=[71, 76]
+2025-11-28 07:42:44 - INFO -     - retrieved_embs: type=ndarray, size=(2, 768), preview=[0.006878691725432873, 0.05218082293868065, -0.010217273607850075]
+2025-11-28 07:42:45 - INFO -     - gt_emb: type=ndarray, size=(768,), preview=[0.006878691725432873, 0.05218082293868065, -0.010217273607850075]
+2025-11-28 07:42:45 - INFO -     - sims: type=list, size=2, preview=[1.0, 0.8765331506729126]
+2025-11-28 07:42:45 - INFO -     - semantic_scores_current: type=list, size=2, preview=[1.0, 0.8765331506729126]
+2025-11-28 07:42:46 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-28 07:42:46 - INFO -     - prediction_preview: type=str, size=149, preview=Seorang desainer pengalaman pengguna adalah...
+2025-11-28 07:42:51 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-28 07:42:54 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-28 07:42:58 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-28 07:43:06 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-28 07:43:08 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-28 07:43:10 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-28 07:43:12 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-28 07:43:13 - INFO - Retrying request to /embeddings in 0.466001 seconds
+2025-11-28 07:43:15 - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-11-28 07:43:16 - INFO - Retrying request to /embeddings in 0.384956 seconds
+2025-11-28 07:43:17 - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-11-28 07:43:19 - INFO - Retrying request to /chat/completions in 0.448854 seconds
+2025-11-28 07:43:21 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-28 07:43:24 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-28 07:43:30 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-28 07:43:32 - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-11-28 07:43:33 - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-11-28 07:43:37 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"

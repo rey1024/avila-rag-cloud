@@ -18,7 +18,7 @@ experiments:
   # GPT 
   # =====================================================
   - id: GEN_GPT4oMini
-    active: true
+    active: false
     llm:
       provider: "openai"
       model: "gpt-4o-mini"
@@ -29,7 +29,7 @@ experiments:
   # GEMMA 7B INSTRUCT
   # =====================================================
   - id: GEN_GEMMA_7B
-    active: false
+    active: true
     llm:
       provider: "ollama"
       model: "gemma:7b-instruct"

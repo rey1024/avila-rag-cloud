@@ -5,6 +5,7 @@
 # ===============================================================
 
 import os
+import logging
 import json
 import yaml
 import faiss
@@ -57,7 +58,7 @@ def fmt(v, d=2):
         return 0.0
 
 def log_var(name, v, preview=200):
-    """Print a compact summary of a variable: type, size/shape and a small preview."""
+    """Log a compact summary of a variable: type, size/shape and a small preview."""
     try:
         t = type(v).__name__
         size = None
@@ -113,9 +114,9 @@ def log_var(name, v, preview=200):
             except Exception:
                 preview_val = str(v)[:preview]
 
-        print(f"    - {name}: type={t}, size={size}, preview={preview_val}")
+        logging.info(f"    - {name}: type={t}, size={size}, preview={preview_val}")
     except Exception as e:
-        print(f"    - {name}: (error summarizing: {e})")
+        logging.info(f"    - {name}: (error summarizing: {e})")
 
 def estimate_tokens(text):
     # estimator sederhana: 1 token ≈ 0.75 kata
@@ -295,11 +296,11 @@ def load_eval_dataset(path):
     df = pd.read_excel(path)
     
     # Ambil 5 teratas dan 5 terbawah
-    # df_top = df.head(5)
-    # df_bottom = df.tail(1)
+    # df_top = df.head(50)
+    # df_bottom = df.tail(50)
     # df = pd.concat([df_top, df_bottom], ignore_index=True)
 
-    df = df[df["id"] == 2].copy()
+    #df = df[df["id"] == 2].copy()
 
 
     df.columns = df.columns.str.lower()
@@ -526,8 +527,18 @@ def find_gt_chunk(answer, chunks, embedder):
 # 8. RAG PIPELINE (FULL GENERATION MODE)
 # ===============================================================
 
-def run_generation(exp, master):
-    print(f"\n=== Menjalankan {exp['id']} ===")
+def run_generation(exp, master, timestamp):
+    # Setup logging
+    log_dir = f"outputGen/Gen{timestamp}/{exp['id']}_{timestamp}"
+    ensure_dir(log_dir)
+    log_file = f"{log_dir}/log_{timestamp}.log"
+    logging.basicConfig(
+        filename=log_file,
+        level=logging.INFO,
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S'
+    )
+    logging.info(f"=== Menjalankan {exp['id']} ===")
 
     # -----------------------------
     # Load FAISS index dan chunks
@@ -540,9 +551,9 @@ def run_generation(exp, master):
     chunks     = [c["text"] for c in raw_chunks]
     chunk_ids  = [c["chunk_id"] for c in raw_chunks]
 
-    print(f"✔ FAISS index loaded: {index_path}")
+    logging.info(f"✔ FAISS index loaded: {index_path}")
     try:
-        print(f"✔ Chunks loaded: {len(chunks)} chunks available")
+        logging.info(f"✔ Chunks loaded: {len(chunks)} chunks available")
     except Exception:
         pass
 
@@ -560,7 +571,7 @@ def run_generation(exp, master):
     # Load dataset evaluasi
     # -----------------------------
     data, df_source = load_eval_dataset(master["dataset"])
-    print(f"✔ Dataset loaded from: {master['dataset']} (items={len(data)})")
+    logging.info(f"✔ Dataset loaded from: {master['dataset']} (items={len(data)})")
 
     # -----------------------------
     # LLM setup
@@ -579,7 +590,7 @@ def run_generation(exp, master):
         llm = None  # berarti pakai Ollama
 
     mode = "Ollama (local)" if llm is None else "OpenAI/ChatOpenAI"
-    print(f"✔ LLM setup -> provider: {provider}, model: {model_name}, endpoint: {endpoint}, mode: {mode}")
+    logging.info(f"✔ LLM setup -> provider: {provider}, model: {model_name}, endpoint: {endpoint}, mode: {mode}")
 
     def llm_generate_single(ctx, q, bloom):
         prompt = build_prompt(ctx, q, bloom)
@@ -607,23 +618,23 @@ def run_generation(exp, master):
 
     # Pre encode semua chunks untuk diagnostics
     from sentence_transformers import util
-    print("• Pre-encoding all chunks for diagnostics...")
+    logging.info("• Pre-encoding all chunks for diagnostics...")
     chunk_embs = embedder.encode(
         chunks,
         normalize_embeddings=True,
         batch_size=8,           # aman untuk GPU 10 GB
         convert_to_numpy=True
     )
-    print("✔ Pre-encoding done")
+    logging.info("✔ Pre-encoding done")
 
 
     total_items = len(data)
-    print(f"Mulai proses {total_items} item...\n")
+    logging.info(f"Mulai proses {total_items} item...")
     faiss_queries = []
 
     # Penjelasan singkat: LOOP 1 melakukan retrieval (FAISS -> rerank),
     # menghitung diagnostic similarity, dan menyimpan konteks untuk tiap item.
-    print("Penjelasan: LOOP 1 = retrieval + diagnostics (tidak ada pemanggilan LLM).")
+    logging.info("Penjelasan: LOOP 1 = retrieval + diagnostics (tidak ada pemanggilan LLM).")
 
     # =====================================================
     # LOOP 1: hanya retrieval dan diagnostics, TANPA LLM
@@ -730,7 +741,7 @@ def run_generation(exp, master):
         # mode Ollama → paralel
         batch_items = []
         for i in range(total_items):
-            print(f"  → LLM Memproses item {i}/{total_items}")
+            logging.info(f"  → LLM Memproses item {i}/{total_items}")
             retrieved = contexts_used[i]
             q         = questions[i]
 
@@ -739,8 +750,8 @@ def run_generation(exp, master):
             prompt = build_prompt(safe_ctx, q, bloom)
 
             # logging per-prompt
-            print(f"    * prompt_length={len(prompt)} chars")
-            print(f"    * prompt_preview={prompt[:300].replace('\n',' ') }")
+            logging.info(f"    * prompt_length={len(prompt)} chars")
+            logging.info(f"    * prompt_preview={prompt[:300].replace('\n',' ') }")
 
             batch_items.append({
                 "id": data[i]["id"],
@@ -748,7 +759,7 @@ def run_generation(exp, master):
             })
 
         # jalankan paralel
-        print(f"  → Menjalankan batch async ke endpoint {endpoint} (model={model_name}), batch_size={exp['llm'].get('batch_size', 6)})")
+        logging.info(f"  → Menjalankan batch async ke endpoint {endpoint} (model={model_name}), batch_size={exp['llm'].get('batch_size', 6)})")
         answers = asyncio.run(
             process_batch(
                 batch_items,
@@ -891,7 +902,7 @@ def main():
         exp_id = exp["id"]
         timestamp = global_timestamp   # PENTING: satu timestamp saja
 
-        result = run_generation(exp, master)
+        result = run_generation(exp, master, timestamp)
 
         (
             df_source,
