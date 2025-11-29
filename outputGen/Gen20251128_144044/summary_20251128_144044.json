@@ -1,0 +1,14 @@
+{
+  "GEN_GEMMA_7B": {
+    "status": "ok",
+    "output_dir": "outputGen/Gen20251128_144044/GEN_GEMMA_7B_20251128_144044",
+    "excel": "outputGen/Gen20251128_144044/GEN_GEMMA_7B_20251128_144044/GEN_GEMMA_7B_20251128_144044.xlsx",
+    "scores": {
+      "context_precision": 1.0,
+      "context_recall": 0.932,
+      "answer_relevancy": 0.633,
+      "faithfulness": 0.818,
+      "answer_correctness": 0.648
+    }
+  }
+}

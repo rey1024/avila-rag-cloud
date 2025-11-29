@@ -8,7 +8,9 @@ from ragas.metrics import (
     AnswerCorrectness, ContextPrecision, ContextRecall
 )
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
-
+import logging
+#logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def fmt(v, d=3):
     try:
@@ -31,9 +33,9 @@ def run_ragas_evaluation(questions, predictions, contexts_used, references, open
       ragas_agg (aggregate)
     """
 
-    print("\n==============================")
-    print("📊  RAGAS Evaluation Started")
-    print("==============================\n")
+    logger.info("\n==============================")
+    logger.info("📊  RAGAS Evaluation Started -v1")
+    logger.info("==============================\n")
 
     # ---------------------------------
     # SETUP LLM DAN EMBEDDER
@@ -49,6 +51,10 @@ def run_ragas_evaluation(questions, predictions, contexts_used, references, open
     )
     ragas_embed.client.batch_size = 128
 
+    clean_references = [
+        ref if isinstance(ref, str) and len(ref.strip()) > 0 else "N/A"
+        for ref in references
+    ]
     # ---------------------------------
     # DATASET RAGAS
     # ---------------------------------
@@ -56,7 +62,7 @@ def run_ragas_evaluation(questions, predictions, contexts_used, references, open
         "question": questions,
         "answer": predictions,
         "contexts": contexts_used,
-        "ground_truth": references
+        "ground_truth": clean_references
     })
 
     metrics = [
@@ -66,21 +72,31 @@ def run_ragas_evaluation(questions, predictions, contexts_used, references, open
         Faithfulness(),
         AnswerCorrectness()
     ]
+    import logging
+    logging.getLogger("ragas").setLevel(logging.DEBUG)
+    logging.getLogger("ragas.metrics").setLevel(logging.DEBUG)
+    logging.getLogger("ragas.llms").setLevel(logging.DEBUG)
+    logging.getLogger("ragas.prompt").setLevel(logging.DEBUG)
+
+
 
     scores = evaluate(ds, metrics, ragas_llm, ragas_embed)
 
     total = len(questions)
     ragas_item = []
 
-    print("🔍 Detail skor per item:\n")
-    for i in range(len(ds)):
-        print(f"\nItem {i+1}")
-        print("Question:", ds[i]["question"])
-        print("Answer:", ds[i]["answer"])
-        print("Contexts:", ds[i]["contexts"])
-        print("Ground Truth:", ds[i]["ground_truth"])
+
+    logger.info("🔍 Detail skor per item:\n")
 
     for i in range(total):
+
+        q = ds[i]["question"]
+        a = ds[i]["answer"]
+        ctx = ds[i]["contexts"]
+        gt = ds[i]["ground_truth"]
+
+
+
         item_scores = {
             "context_precision": fmt(scores["context_precision"][i]),
             "context_recall": fmt(scores["context_recall"][i]),
@@ -90,13 +106,20 @@ def run_ragas_evaluation(questions, predictions, contexts_used, references, open
         }
         ragas_item.append(item_scores)
 
-        print(f"Item {i+1}/{total}")
-        print(f"  - context_precision : {item_scores['context_precision']}")
-        print(f"  - context_recall    : {item_scores['context_recall']}")
-        print(f"  - answer_relevancy  : {item_scores['answer_relevancy']}")
-        print(f"  - faithfulness      : {item_scores['faithfulness']}")
-        print(f"  - answer_correctness: {item_scores['answer_correctness']}")
-        print("")
+        logger.info(f"\n==============================")
+        logger.info(f"Item {i+1}/{total}")
+        logger.info("==============================")
+        logger.info(f"Question       : {q}")
+        logger.info(f"Answer         : {a}")
+        logger.info(f"Ground Truth   : {gt}")
+        logger.info(f"Contexts       : {ctx}")
+        logger.info("--- Skor ---")
+        logger.info(f"  context_precision : {item_scores['context_precision']}")
+        logger.info(f"  context_recall    : {item_scores['context_recall']}")
+        logger.info(f"  answer_relevancy  : {item_scores['answer_relevancy']}")
+        logger.info(f"  faithfulness      : {item_scores['faithfulness']}")
+        logger.info(f"  answer_correctness: {item_scores['answer_correctness']}")
+        logger.info("")
 
     # ---------------------------------
     # AGGREGATE
@@ -109,13 +132,13 @@ def run_ragas_evaluation(questions, predictions, contexts_used, references, open
         "answer_correctness": fmt(np.mean(scores["answer_correctness"])),
     }
 
-    print("\n==============================")
-    print("📈  RAGAS Aggregate Scores")
-    print("==============================\n")
+    logger.info("\n==============================")
+    logger.info("📈  RAGAS Aggregate Scores")
+    logger.info("==============================\n")
 
     for k, v in ragas_agg.items():
         print(f"  {k:20s}: {v}")
 
-    print("\n✔ Evaluasi RAGAS selesai.\n")
+    logger.info("\n✔ Evaluasi RAGAS selesai.\n")
 
     return ragas_item, ragas_agg

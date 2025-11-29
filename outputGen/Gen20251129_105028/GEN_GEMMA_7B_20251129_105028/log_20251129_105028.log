@@ -1,0 +1,535 @@
+2025-11-29 10:50:28 [INFO] ================= Menjalankan GEN_GEMMA_7B ============================
+2025-11-29 10:50:28 [INFO]     - experiment_config: type=dict, size=3, preview={'id': 'GEN_GEMMA_7B', 'active': 'True', 'llm': "{'provider': 'ollama', 'model': 'gemma:7b-instruct', 'max_tokens':..."}
+2025-11-29 10:50:28 [INFO] ✔ FAISS index loaded: outputsRetrieval/20251125_083908/SEM_E5_20251125_083908/faiss/index.faiss
+2025-11-29 10:50:28 [INFO] ✔ Chunks from FAISS loaded: 97 chunks available
+2025-11-29 10:50:28 [INFO] ✔ Dataset loaded from: dataset_evaluation/validation_20251124_101649.xlsx (items=30)
+2025-11-29 10:50:28 [INFO] ✔ LLM setup -> provider: ollama, model: gemma:7b-instruct, endpoint: http://localhost:11434, mode: Ollama (local)
+2025-11-29 10:50:28 [INFO] • Pre-encoding all chunks for diagnostics...
+2025-11-29 10:50:29 [INFO] ✔ Pre-encoding done
+2025-11-29 10:50:29 [INFO]     - chunk_embs_shape: type=tuple, size=2, preview=[97, 768]
+2025-11-29 10:50:29 [INFO] Mulai proses 30 item...
+2025-11-29 10:50:29 [INFO] Penjelasan: LOOP 1 = retrieval + diagnostics (tidak ada pemanggilan LLM).
+2025-11-29 10:50:29 [INFO] 
+############## Memproses item 0/30
+2025-11-29 10:50:30 [INFO]   → Retrieval detail:
+2025-11-29 10:50:30 [INFO]     - ###question: type=str, size=57, preview=Apa yang dimaksud dengan desain...
+2025-11-29 10:50:30 [INFO]     - ###groundtruth_answer: type=str, size=136, preview=Desain pengalaman pengguna berfokus pada...
+2025-11-29 10:50:30 [INFO]     - ###groundtruth_context: type=str, size=3392, preview=Kompleksitas dan Persepsi Desain pengalaman...
+2025-11-29 10:50:30 [INFO]     - faiss_top10: type=list, size=10, preview=['Kompleksitas dan Persepsi Desain pengalaman...', 'Pendekatan ini meningkatkan peluang keberhasilan...', 'UI design umumnya mengacu pada...']
+2025-11-29 10:50:30 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Kompleksitas dan Persepsi Desain pengalaman...', 'Pendekatan ini meningkatkan peluang keberhasilan...']
+2025-11-29 10:50:30 [INFO]     - retrieved_ids: type=list, size=2, preview=[71, 72]
+2025-11-29 10:50:30 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[0.006878828164190054, 0.05218103155493736, -0.010217214934527874]
+2025-11-29 10:50:30 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.006878955755382776, 0.05218098312616348, -0.010217210277915001]
+2025-11-29 10:50:30 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[1.0, 0.9337877631187439]
+2025-11-29 10:50:30 [INFO]     - semantic_scores_current: type=list, size=2, preview=[1.0, 0.9337877631187439]
+2025-11-29 10:50:30 [INFO] 
+############## Memproses item 1/30
+2025-11-29 10:50:30 [INFO]   → Retrieval detail:
+2025-11-29 10:50:30 [INFO]     - ###question: type=str, size=56, preview=Siapa yang disebut sebagai desainer...
+2025-11-29 10:50:30 [INFO]     - ###groundtruth_answer: type=str, size=149, preview=Seorang desainer pengalaman pengguna adalah...
+2025-11-29 10:50:30 [INFO]     - ###groundtruth_context: type=str, size=3392, preview=Kompleksitas dan Persepsi Desain pengalaman...
+2025-11-29 10:50:30 [INFO]     - faiss_top10: type=list, size=10, preview=['Kompleksitas dan Persepsi Desain pengalaman...', 'Prototipe Wizard of Oz bermanfaat...', 'Pendekatan ini meningkatkan peluang keberhasilan...']
+2025-11-29 10:50:31 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Kompleksitas dan Persepsi Desain pengalaman...', 'Tokoh besar dalam bidang pengalaman...']
+2025-11-29 10:50:31 [INFO]     - retrieved_ids: type=list, size=2, preview=[71, 76]
+2025-11-29 10:50:31 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[0.006878828164190054, 0.05218103155493736, -0.010217214934527874]
+2025-11-29 10:50:31 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.006878955755382776, 0.05218098312616348, -0.010217210277915001]
+2025-11-29 10:50:31 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[1.0, 0.8765329122543335]
+2025-11-29 10:50:31 [INFO]     - semantic_scores_current: type=list, size=2, preview=[1.0, 0.8765329122543335]
+2025-11-29 10:50:31 [INFO] 
+############## Memproses item 2/30
+2025-11-29 10:50:31 [INFO]   → Retrieval detail:
+2025-11-29 10:50:31 [INFO]     - ###question: type=str, size=59, preview=Siapakah yang disebut sebagai desainer...
+2025-11-29 10:50:31 [INFO]     - ###groundtruth_answer: type=str, size=141, preview=Desainer pengalaman pengguna adalah seseorang...
+2025-11-29 10:50:31 [INFO]     - ###groundtruth_context: type=str, size=3392, preview=Kompleksitas dan Persepsi Desain pengalaman...
+2025-11-29 10:50:31 [INFO]     - faiss_top10: type=list, size=10, preview=['Kompleksitas dan Persepsi Desain pengalaman...', 'Prototipe Wizard of Oz bermanfaat...', 'UI design umumnya mengacu pada...']
+2025-11-29 10:50:31 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Kompleksitas dan Persepsi Desain pengalaman...', 'Tokoh besar dalam bidang pengalaman...']
+2025-11-29 10:50:31 [INFO]     - retrieved_ids: type=list, size=2, preview=[71, 76]
+2025-11-29 10:50:31 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[0.006878828164190054, 0.05218103155493736, -0.010217214934527874]
+2025-11-29 10:50:31 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.006878955755382776, 0.05218098312616348, -0.010217210277915001]
+2025-11-29 10:50:31 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[1.0, 0.8765329122543335]
+2025-11-29 10:50:31 [INFO]     - semantic_scores_current: type=list, size=2, preview=[1.0, 0.8765329122543335]
+2025-11-29 10:50:31 [INFO] 
+############## Memproses item 3/30
+2025-11-29 10:50:32 [INFO]   → Retrieval detail:
+2025-11-29 10:50:32 [INFO]     - ###question: type=str, size=64, preview=Apa yang dilakukan desainer UX...
+2025-11-29 10:50:32 [INFO]     - ###groundtruth_answer: type=str, size=241, preview=Desainer UX melakukan berbagai kegiatan,...
+2025-11-29 10:50:32 [INFO]     - ###groundtruth_context: type=str, size=3414, preview=“Menjadi berpusat pada manusia memang...
+2025-11-29 10:50:32 [INFO]     - faiss_top10: type=list, size=10, preview=['Pendekatan ini meningkatkan peluang keberhasilan...', 'Kompleksitas dan Persepsi Desain pengalaman...', '“Menjadi berpusat pada manusia memang...']
+2025-11-29 10:50:32 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Pendekatan ini meningkatkan peluang keberhasilan...', 'Kompleksitas dan Persepsi Desain pengalaman...']
+2025-11-29 10:50:32 [INFO]     - retrieved_ids: type=list, size=2, preview=[72, 71]
+2025-11-29 10:50:32 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[0.011666757054626942, 0.028048699721693993, -0.017956260591745377]
+2025-11-29 10:50:32 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.009948774240911007, 0.048830777406692505, -0.00899594184011221]
+2025-11-29 10:50:32 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[0.9152601957321167, 0.9051536917686462]
+2025-11-29 10:50:32 [INFO]     - semantic_scores_current: type=list, size=2, preview=[0.9152601957321167, 0.9051536917686462]
+2025-11-29 10:50:32 [INFO] 
+############## Memproses item 4/30
+2025-11-29 10:50:33 [INFO]   → Retrieval detail:
+2025-11-29 10:50:33 [INFO]     - ###question: type=str, size=89, preview=Apa yang dimaksud dengan desain...
+2025-11-29 10:50:33 [INFO]     - ###groundtruth_answer: type=str, size=228, preview=Desain berpusat pada pengguna merupakan...
+2025-11-29 10:50:33 [INFO]     - ###groundtruth_context: type=str, size=3344, preview=Pendekatan ini meningkatkan peluang keberhasilan...
+2025-11-29 10:50:33 [INFO]     - faiss_top10: type=list, size=10, preview=['Pendekatan ini meningkatkan peluang keberhasilan...', 'Kompleksitas dan Persepsi Desain pengalaman...', 'Prototipe Wizard of Oz bermanfaat...']
+2025-11-29 10:50:33 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Prototipe Wizard of Oz bermanfaat...', 'Pendekatan ini meningkatkan peluang keberhasilan...']
+2025-11-29 10:50:33 [INFO]     - retrieved_ids: type=list, size=2, preview=[28, 72]
+2025-11-29 10:50:33 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[0.00397731177508831, 0.03438473865389824, -0.008088374510407448]
+2025-11-29 10:50:33 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.011666991747915745, 0.02804895117878914, -0.017956210300326347]
+2025-11-29 10:50:33 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[0.8848509788513184, 1.0000001192092896]
+2025-11-29 10:50:33 [INFO]     - semantic_scores_current: type=list, size=2, preview=[0.8848509788513184, 1.0000001192092896]
+2025-11-29 10:50:33 [INFO] 
+############## Memproses item 5/30
+2025-11-29 10:50:34 [INFO]   → Retrieval detail:
+2025-11-29 10:50:34 [INFO]     - ###question: type=str, size=99, preview=Mengapa penting untuk memiliki pemahaman...
+2025-11-29 10:50:34 [INFO]     - ###groundtruth_answer: type=str, size=295, preview=Penting untuk memiliki pemahaman dasar...
+2025-11-29 10:50:34 [INFO]     - ###groundtruth_context: type=str, size=3392, preview=Kompleksitas dan Persepsi Desain pengalaman...
+2025-11-29 10:50:34 [INFO]     - faiss_top10: type=list, size=10, preview=['Kompleksitas dan Persepsi Desain pengalaman...', 'Pendekatan ini meningkatkan peluang keberhasilan...', 'Menghasilkan Ide dan Solusi Kreatif...']
+2025-11-29 10:50:34 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Kompleksitas dan Persepsi Desain pengalaman...', 'Tokoh besar dalam bidang pengalaman...']
+2025-11-29 10:50:34 [INFO]     - retrieved_ids: type=list, size=2, preview=[71, 76]
+2025-11-29 10:50:34 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[0.006878828164190054, 0.05218103155493736, -0.010217214934527874]
+2025-11-29 10:50:34 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.006878955755382776, 0.05218098312616348, -0.010217210277915001]
+2025-11-29 10:50:34 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[1.0, 0.8765329122543335]
+2025-11-29 10:50:34 [INFO]     - semantic_scores_current: type=list, size=2, preview=[1.0, 0.8765329122543335]
+2025-11-29 10:50:34 [INFO] 
+############## Memproses item 6/30
+2025-11-29 10:50:34 [INFO]   → Retrieval detail:
+2025-11-29 10:50:34 [INFO]     - ###question: type=str, size=72, preview=Mengapa desain berpusat pada pengguna...
+2025-11-29 10:50:34 [INFO]     - ###groundtruth_answer: type=str, size=361, preview=Desain berpusat pada pengguna penting...
+2025-11-29 10:50:34 [INFO]     - ###groundtruth_context: type=str, size=3344, preview=Pendekatan ini meningkatkan peluang keberhasilan...
+2025-11-29 10:50:34 [INFO]     - faiss_top10: type=list, size=10, preview=['Pendekatan ini meningkatkan peluang keberhasilan...', 'Kompleksitas dan Persepsi Desain pengalaman...', 'Standar ISO 9241-11 mendefinisikan usability...']
+2025-11-29 10:50:34 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Standar ISO 9241-11 mendefinisikan usability...', 'Pendekatan ini meningkatkan peluang keberhasilan...']
+2025-11-29 10:50:34 [INFO]     - retrieved_ids: type=list, size=2, preview=[81, 72]
+2025-11-29 10:50:34 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[0.025668581947684288, 0.0572114922106266, -0.008710364811122417]
+2025-11-29 10:50:34 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.011666991747915745, 0.02804895117878914, -0.017956210300326347]
+2025-11-29 10:50:34 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[0.9036033749580383, 1.0000001192092896]
+2025-11-29 10:50:34 [INFO]     - semantic_scores_current: type=list, size=2, preview=[0.9036033749580383, 1.0000001192092896]
+2025-11-29 10:50:34 [INFO] 
+############## Memproses item 7/30
+2025-11-29 10:50:35 [INFO]   → Retrieval detail:
+2025-11-29 10:50:35 [INFO]     - ###question: type=str, size=111, preview=Mengapa penggunaan prinsip UX secara...
+2025-11-29 10:50:35 [INFO]     - ###groundtruth_answer: type=str, size=166, preview=Penggunaan prinsip UX secara tepat...
+2025-11-29 10:50:35 [INFO]     - ###groundtruth_context: type=str, size=3344, preview=Pendekatan ini meningkatkan peluang keberhasilan...
+2025-11-29 10:50:35 [INFO]     - faiss_top10: type=list, size=10, preview=['Pendekatan ini meningkatkan peluang keberhasilan...', 'Contoh: Kios informasi bandara mudah...', 'Standar ISO 9241-11 mendefinisikan usability...']
+2025-11-29 10:50:35 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Pendekatan ini meningkatkan peluang keberhasilan...', '“Menjadi berpusat pada manusia memang...']
+2025-11-29 10:50:35 [INFO]     - retrieved_ids: type=list, size=2, preview=[72, 29]
+2025-11-29 10:50:35 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[0.011666757054626942, 0.028048699721693993, -0.017956260591745377]
+2025-11-29 10:50:35 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.011666991747915745, 0.02804895117878914, -0.017956210300326347]
+2025-11-29 10:50:35 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[1.0000001192092896, 0.9152603149414062]
+2025-11-29 10:50:35 [INFO]     - semantic_scores_current: type=list, size=2, preview=[1.0000001192092896, 0.9152603149414062]
+2025-11-29 10:50:35 [INFO] 
+############## Memproses item 8/30
+2025-11-29 10:50:36 [INFO]   → Retrieval detail:
+2025-11-29 10:50:36 [INFO]     - ###question: type=str, size=93, preview=Mengapa design thinking dianggap sebagai...
+2025-11-29 10:50:36 [INFO]     - ###groundtruth_answer: type=str, size=680, preview=Design thinking dianggap sebagai pendekatan...
+2025-11-29 10:50:36 [INFO]     - ###groundtruth_context: type=str, size=3297, preview=Wawasan ini akan memberi Anda...
+2025-11-29 10:50:36 [INFO]     - faiss_top10: type=list, size=10, preview=['Wawasan ini akan memberi Anda...', 'Tokoh besar dalam bidang pengalaman...', 'Design thinking mendorong inovasi. Perusahaan...']
+2025-11-29 10:50:36 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Wawasan ini akan memberi Anda...', 'Tokoh besar dalam bidang pengalaman...']
+2025-11-29 10:50:36 [INFO]     - retrieved_ids: type=list, size=2, preview=[73, 76]
+2025-11-29 10:50:36 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[-0.006219071336090565, 0.05074331536889076, -0.0018680280772969127]
+2025-11-29 10:50:36 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[-0.006219025701284409, 0.05074326694011688, -0.001868042047135532]
+2025-11-29 10:50:36 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[1.0, 0.8989713191986084]
+2025-11-29 10:50:36 [INFO]     - semantic_scores_current: type=list, size=2, preview=[1.0, 0.8989713191986084]
+2025-11-29 10:50:36 [INFO] 
+############## Memproses item 9/30
+2025-11-29 10:50:37 [INFO]   → Retrieval detail:
+2025-11-29 10:50:37 [INFO]     - ###question: type=str, size=93, preview=Mengapa pola pikir yang terbangun...
+2025-11-29 10:50:37 [INFO]     - ###groundtruth_answer: type=str, size=427, preview=Pola pikir yang terbangun dari...
+2025-11-29 10:50:37 [INFO]     - ###groundtruth_context: type=str, size=3269, preview=• Ideate: Menantang asumsi dan...
+2025-11-29 10:50:37 [INFO]     - faiss_top10: type=list, size=10, preview=['• Ideate: Menantang asumsi dan...', 'Para petugas darurat memperdebatkan apakah...', 'Tokoh besar dalam bidang pengalaman...']
+2025-11-29 10:50:37 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['• Ideate: Menantang asumsi dan...', 'Para petugas darurat memperdebatkan apakah...']
+2025-11-29 10:50:37 [INFO]     - retrieved_ids: type=list, size=2, preview=[74, 75]
+2025-11-29 10:50:37 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[0.015898946672677994, 0.04670150950551033, -0.005131197161972523]
+2025-11-29 10:50:37 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.015898901969194412, 0.04670131579041481, -0.005131163634359837]
+2025-11-29 10:50:37 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[1.0000001192092896, 0.8847090005874634]
+2025-11-29 10:50:37 [INFO]     - semantic_scores_current: type=list, size=2, preview=[1.0000001192092896, 0.8847090005874634]
+2025-11-29 10:50:37 [INFO] 
+############## Memproses item 10/30
+2025-11-29 10:50:37 [INFO]   → Retrieval detail:
+2025-11-29 10:50:37 [INFO]     - ###question: type=str, size=127, preview=Bagaimana seorang desainer pengalaman pengguna...
+2025-11-29 10:50:37 [INFO]     - ###groundtruth_answer: type=str, size=285, preview=Seorang desainer pengalaman pengguna dapat...
+2025-11-29 10:50:37 [INFO]     - ###groundtruth_context: type=str, size=3392, preview=Kompleksitas dan Persepsi Desain pengalaman...
+2025-11-29 10:50:37 [INFO]     - faiss_top10: type=list, size=10, preview=['Kompleksitas dan Persepsi Desain pengalaman...', 'Pendekatan ini meningkatkan peluang keberhasilan...', 'Agar sebuah desain berhasil, Anda...']
+2025-11-29 10:50:37 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Kompleksitas dan Persepsi Desain pengalaman...', 'Pendekatan ini meningkatkan peluang keberhasilan...']
+2025-11-29 10:50:37 [INFO]     - retrieved_ids: type=list, size=2, preview=[71, 72]
+2025-11-29 10:50:37 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[0.006878828164190054, 0.05218103155493736, -0.010217214934527874]
+2025-11-29 10:50:38 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.006878955755382776, 0.05218098312616348, -0.010217210277915001]
+2025-11-29 10:50:38 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[1.0, 0.9337877631187439]
+2025-11-29 10:50:38 [INFO]     - semantic_scores_current: type=list, size=2, preview=[1.0, 0.9337877631187439]
+2025-11-29 10:50:38 [INFO] 
+############## Memproses item 11/30
+2025-11-29 10:50:38 [INFO]   → Retrieval detail:
+2025-11-29 10:50:38 [INFO]     - ###question: type=str, size=71, preview=Bagaimana cara menggunakan fase Empathize...
+2025-11-29 10:50:38 [INFO]     - ###groundtruth_answer: type=str, size=108, preview=Cara menggunakan fase Empathize dalam...
+2025-11-29 10:50:38 [INFO]     - ###groundtruth_context: type=str, size=3357, preview=Menghasilkan Ide dan Solusi Kreatif...
+2025-11-29 10:50:38 [INFO]     - faiss_top10: type=list, size=10, preview=['Define Pada fase Define, tim...', 'Tahap 2: Define — Merumuskan...', 'Menghasilkan Ide dan Solusi Kreatif...']
+2025-11-29 10:50:38 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Menghasilkan Ide dan Solusi Kreatif...', 'Define Pada fase Define, tim...']
+2025-11-29 10:50:38 [INFO]     - retrieved_ids: type=list, size=2, preview=[77, 9]
+2025-11-29 10:50:38 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[-0.0013971277512609959, 0.03619640693068504, -0.023224199190735817]
+2025-11-29 10:50:38 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[-0.0013969680294394493, 0.036196399480104446, -0.02322428487241268]
+2025-11-29 10:50:38 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[1.0000001192092896, 0.9086271524429321]
+2025-11-29 10:50:38 [INFO]     - semantic_scores_current: type=list, size=2, preview=[1.0000001192092896, 0.9086271524429321]
+2025-11-29 10:50:38 [INFO] 
+############## Memproses item 12/30
+2025-11-29 10:50:39 [INFO]   → Retrieval detail:
+2025-11-29 10:50:39 [INFO]     - ###question: type=str, size=101, preview=Bagaimana Anda dapat menggunakan card...
+2025-11-29 10:50:39 [INFO]     - ###groundtruth_answer: type=str, size=168, preview=Anda dapat menggunakan card sorting...
+2025-11-29 10:50:39 [INFO]     - ###groundtruth_context: type=str, size=1687, preview=“Desain yang baik adalah tentang...
+2025-11-29 10:50:39 [INFO]     - faiss_top10: type=list, size=10, preview=['“Desain yang baik adalah tentang...', 'CARD SORTING GUIDELINES (Panduan Card...', 'Ini direkomendasikan jika Anda bekerja...']
+2025-11-29 10:50:39 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['“Desain yang baik adalah tentang...', 'Ini direkomendasikan jika Anda bekerja...']
+2025-11-29 10:50:39 [INFO]     - retrieved_ids: type=list, size=2, preview=[87, 49]
+2025-11-29 10:50:39 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[0.030307503417134285, 0.04772870987653732, -0.021051064133644104]
+2025-11-29 10:50:39 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.030307624489068985, 0.04772869497537613, -0.021051034331321716]
+2025-11-29 10:50:39 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[1.0000001192092896, 0.8622079491615295]
+2025-11-29 10:50:39 [INFO]     - semantic_scores_current: type=list, size=2, preview=[1.0000001192092896, 0.8622079491615295]
+2025-11-29 10:50:39 [INFO] 
+############## Memproses item 13/30
+2025-11-29 10:50:40 [INFO]   → Retrieval detail:
+2025-11-29 10:50:40 [INFO]     - ###question: type=str, size=117, preview=Bagaimana interaction designer dapat menggunakan...
+2025-11-29 10:50:40 [INFO]     - ###groundtruth_answer: type=str, size=196, preview=Interaction designer dapat menggunakan elemen...
+2025-11-29 10:50:40 [INFO]     - ###groundtruth_context: type=str, size=3378, preview=Teknik teknik ini berasal dari...
+2025-11-29 10:50:40 [INFO]     - faiss_top10: type=list, size=10, preview=['Teknik teknik ini berasal dari...', 'Manusia sangat bergantung pada visual;...', 'Saat ragu, tetaplah sederhana dan...']
+2025-11-29 10:50:40 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Contoh: Kios informasi bandara mudah...', 'Manusia sangat bergantung pada visual;...']
+2025-11-29 10:50:40 [INFO]     - retrieved_ids: type=list, size=2, preview=[5, 91]
+2025-11-29 10:50:40 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[0.017811836674809456, 0.052606575191020966, -0.013052896596491337]
+2025-11-29 10:50:40 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.014545767568051815, 0.05544174462556839, -0.012909729965031147]
+2025-11-29 10:50:40 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[0.8846467137336731, 0.9075089693069458]
+2025-11-29 10:50:40 [INFO]     - semantic_scores_current: type=list, size=2, preview=[0.8846467137336731, 0.9075089693069458]
+2025-11-29 10:50:40 [INFO] 
+############## Memproses item 14/30
+2025-11-29 10:50:41 [INFO]   → Retrieval detail:
+2025-11-29 10:50:41 [INFO]     - ###question: type=str, size=130, preview=Bagaimana visualisasi informasi dapat digunakan...
+2025-11-29 10:50:41 [INFO]     - ###groundtruth_answer: type=str, size=202, preview=Visualisasi informasi dapat digunakan untuk...
+2025-11-29 10:50:41 [INFO]     - ###groundtruth_context: type=str, size=3435, preview=Penggunaan Umum Visualisasi Informasi Terdapat...
+2025-11-29 10:50:41 [INFO]     - faiss_top10: type=list, size=10, preview=['Penggunaan Umum Visualisasi Informasi Terdapat...', 'Misalnya, bayangkan dua eksperimen: dalam...', 'Kabar baiknya, Anda tidak perlu...']
+2025-11-29 10:50:41 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Misalnya, bayangkan dua eksperimen: dalam...', 'Penggunaan Umum Visualisasi Informasi Terdapat...']
+2025-11-29 10:50:41 [INFO]     - retrieved_ids: type=list, size=2, preview=[97, 96]
+2025-11-29 10:50:41 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[-0.011480760760605335, 0.04922129958868027, -0.022507108747959137]
+2025-11-29 10:50:41 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.0067415740340948105, 0.044849198311567307, -0.018605457618832588]
+2025-11-29 10:50:41 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[0.8799351453781128, 1.0000001192092896]
+2025-11-29 10:50:41 [INFO]     - semantic_scores_current: type=list, size=2, preview=[0.8799351453781128, 1.0000001192092896]
+2025-11-29 10:50:41 [INFO] 
+############## Memproses item 15/30
+2025-11-29 10:50:41 [INFO]   → Retrieval detail:
+2025-11-29 10:50:41 [INFO]     - ###question: type=str, size=128, preview=Analisis bagaimana desain berpusat pada...
+2025-11-29 10:50:41 [INFO]     - ###groundtruth_answer: type=str, size=929, preview=Desain berpusat pada pengguna dan...
+2025-11-29 10:50:41 [INFO]     - ###groundtruth_context: type=str, size=3297, preview=Wawasan ini akan memberi Anda...
+2025-11-29 10:50:41 [INFO]     - faiss_top10: type=list, size=10, preview=['Pendekatan ini meningkatkan peluang keberhasilan...', 'Menghasilkan Ide dan Solusi Kreatif...', 'Misalnya, survei daring dapat digunakan...']
+2025-11-29 10:50:41 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Tokoh besar dalam bidang pengalaman...', 'Pendekatan ini meningkatkan peluang keberhasilan...']
+2025-11-29 10:50:41 [INFO]     - retrieved_ids: type=list, size=2, preview=[76, 72]
+2025-11-29 10:50:41 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[-0.024442607536911964, 0.040596362203359604, -0.017491882666945457]
+2025-11-29 10:50:41 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[-0.006219025701284409, 0.05074326694011688, -0.001868042047135532]
+2025-11-29 10:50:41 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[0.8989713191986084, 0.9048846960067749]
+2025-11-29 10:50:41 [INFO]     - semantic_scores_current: type=list, size=2, preview=[0.8989713191986084, 0.9048846960067749]
+2025-11-29 10:50:41 [INFO] 
+############## Memproses item 16/30
+2025-11-29 10:50:42 [INFO]   → Retrieval detail:
+2025-11-29 10:50:42 [INFO]     - ###question: type=str, size=143, preview=Analisis hubungan antara peran desainer...
+2025-11-29 10:50:42 [INFO]     - ###groundtruth_answer: type=str, size=339, preview=Peran desainer UX dalam menyelidiki...
+2025-11-29 10:50:42 [INFO]     - ###groundtruth_context: type=str, size=3414, preview=“Menjadi berpusat pada manusia memang...
+2025-11-29 10:50:42 [INFO]     - faiss_top10: type=list, size=10, preview=['“Menjadi berpusat pada manusia memang...', 'Kompleksitas dan Persepsi Desain pengalaman...', 'Pendekatan ini meningkatkan peluang keberhasilan...']
+2025-11-29 10:50:42 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Kompleksitas dan Persepsi Desain pengalaman...', '“Menjadi berpusat pada manusia memang...']
+2025-11-29 10:50:42 [INFO]     - retrieved_ids: type=list, size=2, preview=[71, 29]
+2025-11-29 10:50:42 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[0.006878828164190054, 0.05218103155493736, -0.010217214934527874]
+2025-11-29 10:50:42 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.009948774240911007, 0.048830777406692505, -0.00899594184011221]
+2025-11-29 10:50:42 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[0.9051536917686462, 1.0000001192092896]
+2025-11-29 10:50:42 [INFO]     - semantic_scores_current: type=list, size=2, preview=[0.9051536917686462, 1.0000001192092896]
+2025-11-29 10:50:42 [INFO] 
+############## Memproses item 17/30
+2025-11-29 10:50:43 [INFO]   → Retrieval detail:
+2025-11-29 10:50:43 [INFO]     - ###question: type=str, size=177, preview=Analisis bagaimana desain pengalaman pengguna...
+2025-11-29 10:50:43 [INFO]     - ###groundtruth_answer: type=str, size=269, preview=Desain pengalaman pengguna berperan dalam...
+2025-11-29 10:50:43 [INFO]     - ###groundtruth_context: type=str, size=3392, preview=Kompleksitas dan Persepsi Desain pengalaman...
+2025-11-29 10:50:43 [INFO]     - faiss_top10: type=list, size=10, preview=['Menghasilkan Ide dan Solusi Kreatif...', 'Pendekatan ini meningkatkan peluang keberhasilan...', 'Kompleksitas dan Persepsi Desain pengalaman...']
+2025-11-29 10:50:43 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Pendekatan ini meningkatkan peluang keberhasilan...', 'Kompleksitas dan Persepsi Desain pengalaman...']
+2025-11-29 10:50:43 [INFO]     - retrieved_ids: type=list, size=2, preview=[72, 71]
+2025-11-29 10:50:43 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[0.011666757054626942, 0.028048699721693993, -0.017956260591745377]
+2025-11-29 10:50:43 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.006878955755382776, 0.05218098312616348, -0.010217210277915001]
+2025-11-29 10:50:43 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[0.9337877631187439, 1.0]
+2025-11-29 10:50:43 [INFO]     - semantic_scores_current: type=list, size=2, preview=[0.9337877631187439, 1.0]
+2025-11-29 10:50:43 [INFO] 
+############## Memproses item 18/30
+2025-11-29 10:50:44 [INFO]   → Retrieval detail:
+2025-11-29 10:50:44 [INFO]     - ###question: type=str, size=142, preview=Analisis bagaimana design thinking, sebagai...
+2025-11-29 10:50:44 [INFO]     - ###groundtruth_answer: type=str, size=276, preview=Design thinking dapat berkontribusi pada...
+2025-11-29 10:50:44 [INFO]     - ###groundtruth_context: type=str, size=3297, preview=Wawasan ini akan memberi Anda...
+2025-11-29 10:50:44 [INFO]     - faiss_top10: type=list, size=10, preview=['Menghasilkan Ide dan Solusi Kreatif...', 'Wawasan ini akan memberi Anda...', '“Menjadi berpusat pada manusia memang...']
+2025-11-29 10:50:44 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Prototipe Wizard of Oz bermanfaat...', 'Contoh: Kios informasi bandara mudah...']
+2025-11-29 10:50:44 [INFO]     - retrieved_ids: type=list, size=2, preview=[28, 5]
+2025-11-29 10:50:44 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[0.00397731177508831, 0.03438473865389824, -0.008088374510407448]
+2025-11-29 10:50:44 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[-0.006219025701284409, 0.05074326694011688, -0.001868042047135532]
+2025-11-29 10:50:44 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[0.8813577890396118, 0.8828359842300415]
+2025-11-29 10:50:44 [INFO]     - semantic_scores_current: type=list, size=2, preview=[0.8813577890396118, 0.8828359842300415]
+2025-11-29 10:50:44 [INFO] 
+############## Memproses item 19/30
+2025-11-29 10:50:44 [INFO]   → Retrieval detail:
+2025-11-29 10:50:44 [INFO]     - ###question: type=str, size=142, preview=Analisis bagaimana desain berpusat pada...
+2025-11-29 10:50:44 [INFO]     - ###groundtruth_answer: type=str, size=837, preview=Desain berpusat pada pengguna dan...
+2025-11-29 10:50:44 [INFO]     - ###groundtruth_context: type=str, size=3297, preview=Wawasan ini akan memberi Anda...
+2025-11-29 10:50:44 [INFO]     - faiss_top10: type=list, size=10, preview=['Pendekatan ini meningkatkan peluang keberhasilan...', 'Menghasilkan Ide dan Solusi Kreatif...', 'Misalnya, survei daring dapat digunakan...']
+2025-11-29 10:50:44 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Pendekatan ini meningkatkan peluang keberhasilan...', 'Tokoh besar dalam bidang pengalaman...']
+2025-11-29 10:50:44 [INFO]     - retrieved_ids: type=list, size=2, preview=[72, 76]
+2025-11-29 10:50:44 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[0.011666757054626942, 0.028048699721693993, -0.017956260591745377]
+2025-11-29 10:50:44 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[-0.006219025701284409, 0.05074326694011688, -0.001868042047135532]
+2025-11-29 10:50:44 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[0.9048846960067749, 0.8989713191986084]
+2025-11-29 10:50:44 [INFO]     - semantic_scores_current: type=list, size=2, preview=[0.9048846960067749, 0.8989713191986084]
+2025-11-29 10:50:44 [INFO] 
+############## Memproses item 20/30
+2025-11-29 10:50:45 [INFO]   → Retrieval detail:
+2025-11-29 10:50:45 [INFO]     - ###question: type=str, size=116, preview=Evaluasi pentingnya prinsip UX dalam...
+2025-11-29 10:50:45 [INFO]     - ###groundtruth_answer: type=str, size=166, preview=Penggunaan prinsip UX secara tepat...
+2025-11-29 10:50:45 [INFO]     - ###groundtruth_context: type=str, size=3344, preview=Pendekatan ini meningkatkan peluang keberhasilan...
+2025-11-29 10:50:45 [INFO]     - faiss_top10: type=list, size=10, preview=['Pendekatan ini meningkatkan peluang keberhasilan...', 'Standar ISO 9241-11 mendefinisikan usability...', 'Contoh: Kios informasi bandara mudah...']
+2025-11-29 10:50:45 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Pendekatan ini meningkatkan peluang keberhasilan...', 'Standar ISO 9241-11 mendefinisikan usability...']
+2025-11-29 10:50:45 [INFO]     - retrieved_ids: type=list, size=2, preview=[72, 81]
+2025-11-29 10:50:45 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[0.011666757054626942, 0.028048699721693993, -0.017956260591745377]
+2025-11-29 10:50:45 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.011666991747915745, 0.02804895117878914, -0.017956210300326347]
+2025-11-29 10:50:45 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[1.0000001192092896, 0.9036033749580383]
+2025-11-29 10:50:45 [INFO]     - semantic_scores_current: type=list, size=2, preview=[1.0000001192092896, 0.9036033749580383]
+2025-11-29 10:50:45 [INFO] 
+############## Memproses item 21/30
+2025-11-29 10:50:46 [INFO]   → Retrieval detail:
+2025-11-29 10:50:46 [INFO]     - ###question: type=str, size=140, preview=Kritik pendekatan tradisional dalam desain...
+2025-11-29 10:50:46 [INFO]     - ###groundtruth_answer: type=str, size=574, preview=Pendekatan tradisional dalam desain produk...
+2025-11-29 10:50:46 [INFO]     - ###groundtruth_context: type=str, size=3344, preview=Pendekatan ini meningkatkan peluang keberhasilan...
+2025-11-29 10:50:46 [INFO]     - faiss_top10: type=list, size=10, preview=['Pendekatan ini meningkatkan peluang keberhasilan...', 'Kompleksitas dan Persepsi Desain pengalaman...', 'Misalnya, survei daring dapat digunakan...']
+2025-11-29 10:50:46 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Pendekatan ini meningkatkan peluang keberhasilan...', 'Teknik teknik ini berasal dari...']
+2025-11-29 10:50:46 [INFO]     - retrieved_ids: type=list, size=2, preview=[72, 90]
+2025-11-29 10:50:46 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[0.011666757054626942, 0.028048699721693993, -0.017956260591745377]
+2025-11-29 10:50:46 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.011666991747915745, 0.02804895117878914, -0.017956210300326347]
+2025-11-29 10:50:46 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[1.0000001192092896, 0.8939561247825623]
+2025-11-29 10:50:46 [INFO]     - semantic_scores_current: type=list, size=2, preview=[1.0000001192092896, 0.8939561247825623]
+2025-11-29 10:50:46 [INFO] 
+############## Memproses item 22/30
+2025-11-29 10:50:47 [INFO]   → Retrieval detail:
+2025-11-29 10:50:47 [INFO]     - ###question: type=str, size=162, preview=Evaluasi efektivitas pendekatan desain berpusat...
+2025-11-29 10:50:47 [INFO]     - ###groundtruth_answer: type=str, size=453, preview=Pendekatan desain berpusat pada pengguna...
+2025-11-29 10:50:47 [INFO]     - ###groundtruth_context: type=str, size=3344, preview=Pendekatan ini meningkatkan peluang keberhasilan...
+2025-11-29 10:50:47 [INFO]     - faiss_top10: type=list, size=10, preview=['Pendekatan ini meningkatkan peluang keberhasilan...', 'Kompleksitas dan Persepsi Desain pengalaman...', 'UI design umumnya mengacu pada...']
+2025-11-29 10:50:47 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Pendekatan ini meningkatkan peluang keberhasilan...', 'Standar ISO 9241-11 mendefinisikan usability...']
+2025-11-29 10:50:47 [INFO]     - retrieved_ids: type=list, size=2, preview=[72, 81]
+2025-11-29 10:50:47 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[0.011666757054626942, 0.028048699721693993, -0.017956260591745377]
+2025-11-29 10:50:47 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.011666991747915745, 0.02804895117878914, -0.017956210300326347]
+2025-11-29 10:50:47 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[1.0000001192092896, 0.9036033749580383]
+2025-11-29 10:50:47 [INFO]     - semantic_scores_current: type=list, size=2, preview=[1.0000001192092896, 0.9036033749580383]
+2025-11-29 10:50:47 [INFO] 
+############## Memproses item 23/30
+2025-11-29 10:50:47 [INFO]   → Retrieval detail:
+2025-11-29 10:50:47 [INFO]     - ###question: type=str, size=174, preview=Evaluasi bagaimana perubahan dalam pendekatan...
+2025-11-29 10:50:47 [INFO]     - ###groundtruth_answer: type=str, size=501, preview=Perubahan dalam pendekatan desain produk...
+2025-11-29 10:50:47 [INFO]     - ###groundtruth_context: type=str, size=3344, preview=Pendekatan ini meningkatkan peluang keberhasilan...
+2025-11-29 10:50:47 [INFO]     - faiss_top10: type=list, size=10, preview=['Pendekatan ini meningkatkan peluang keberhasilan...', '00:02:00 → 00:02:29 Sebaliknya, tim...', 'Menghasilkan Ide dan Solusi Kreatif...']
+2025-11-29 10:50:47 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Pendekatan ini meningkatkan peluang keberhasilan...', 'Menghasilkan Ide dan Solusi Kreatif...']
+2025-11-29 10:50:47 [INFO]     - retrieved_ids: type=list, size=2, preview=[72, 77]
+2025-11-29 10:50:48 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[0.011666757054626942, 0.028048699721693993, -0.017956260591745377]
+2025-11-29 10:50:48 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.011666991747915745, 0.02804895117878914, -0.017956210300326347]
+2025-11-29 10:50:48 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[1.0000001192092896, 0.9066518545150757]
+2025-11-29 10:50:48 [INFO]     - semantic_scores_current: type=list, size=2, preview=[1.0000001192092896, 0.9066518545150757]
+2025-11-29 10:50:48 [INFO] 
+############## Memproses item 24/30
+2025-11-29 10:50:48 [INFO]   → Retrieval detail:
+2025-11-29 10:50:48 [INFO]     - ###question: type=str, size=147, preview=Evaluasi efektivitas kursus 'User Experience:...
+2025-11-29 10:50:48 [INFO]     - ###groundtruth_answer: type=str, size=541, preview=Kursus 'User Experience: The Beginner’s...
+2025-11-29 10:50:48 [INFO]     - ###groundtruth_context: type=str, size=3344, preview=Pendekatan ini meningkatkan peluang keberhasilan...
+2025-11-29 10:50:48 [INFO]     - faiss_top10: type=list, size=10, preview=['Pendekatan ini meningkatkan peluang keberhasilan...', 'Kompleksitas dan Persepsi Desain pengalaman...', 'Menghasilkan Ide dan Solusi Kreatif...']
+2025-11-29 10:50:48 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Menghasilkan Ide dan Solusi Kreatif...', 'Setelah selesai, berikut tiga area...']
+2025-11-29 10:50:48 [INFO]     - retrieved_ids: type=list, size=2, preview=[77, 65]
+2025-11-29 10:50:48 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[-0.0013971277512609959, 0.03619640693068504, -0.023224199190735817]
+2025-11-29 10:50:48 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.011666991747915745, 0.02804895117878914, -0.017956210300326347]
+2025-11-29 10:50:48 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[0.9066518545150757, 0.8817182779312134]
+2025-11-29 10:50:48 [INFO]     - semantic_scores_current: type=list, size=2, preview=[0.9066518545150757, 0.8817182779312134]
+2025-11-29 10:50:48 [INFO] 
+############## Memproses item 25/30
+2025-11-29 10:50:49 [INFO]   → Retrieval detail:
+2025-11-29 10:50:49 [INFO]     - ###question: type=str, size=162, preview=Rancang sebuah pendekatan yang menggabungkan...
+2025-11-29 10:50:49 [INFO]     - ###groundtruth_answer: type=str, size=720, preview=Untuk meningkatkan pengalaman pengguna dalam...
+2025-11-29 10:50:49 [INFO]     - ###groundtruth_context: type=str, size=3344, preview=Pendekatan ini meningkatkan peluang keberhasilan...
+2025-11-29 10:50:49 [INFO]     - faiss_top10: type=list, size=10, preview=['Menghasilkan Ide dan Solusi Kreatif...', 'Pendekatan ini meningkatkan peluang keberhasilan...', 'Wawasan ini akan memberi Anda...']
+2025-11-29 10:50:49 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Pendekatan ini meningkatkan peluang keberhasilan...', 'Tokoh besar dalam bidang pengalaman...']
+2025-11-29 10:50:49 [INFO]     - retrieved_ids: type=list, size=2, preview=[72, 76]
+2025-11-29 10:50:49 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[0.011666757054626942, 0.028048699721693993, -0.017956260591745377]
+2025-11-29 10:50:49 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.011666991747915745, 0.02804895117878914, -0.017956210300326347]
+2025-11-29 10:50:49 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[1.0000001192092896, 0.8825364112854004]
+2025-11-29 10:50:49 [INFO]     - semantic_scores_current: type=list, size=2, preview=[1.0000001192092896, 0.8825364112854004]
+2025-11-29 10:50:49 [INFO] 
+############## Memproses item 26/30
+2025-11-29 10:50:50 [INFO]   → Retrieval detail:
+2025-11-29 10:50:50 [INFO]     - ###question: type=str, size=171, preview=Rancang sebuah strategi untuk startup...
+2025-11-29 10:50:50 [INFO]     - ###groundtruth_answer: type=str, size=718, preview=Untuk startup berteknologi tinggi yang...
+2025-11-29 10:50:50 [INFO]     - ###groundtruth_context: type=str, size=3344, preview=Pendekatan ini meningkatkan peluang keberhasilan...
+2025-11-29 10:50:50 [INFO]     - faiss_top10: type=list, size=10, preview=['Pendekatan ini meningkatkan peluang keberhasilan...', 'Kompleksitas dan Persepsi Desain pengalaman...', 'Contoh: Kios informasi bandara mudah...']
+2025-11-29 10:50:50 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Pendekatan ini meningkatkan peluang keberhasilan...', 'Kompleksitas dan Persepsi Desain pengalaman...']
+2025-11-29 10:50:50 [INFO]     - retrieved_ids: type=list, size=2, preview=[72, 71]
+2025-11-29 10:50:50 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[0.011666757054626942, 0.028048699721693993, -0.017956260591745377]
+2025-11-29 10:50:50 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.011666991747915745, 0.02804895117878914, -0.017956210300326347]
+2025-11-29 10:50:50 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[1.0000001192092896, 0.9337880611419678]
+2025-11-29 10:50:50 [INFO]     - semantic_scores_current: type=list, size=2, preview=[1.0000001192092896, 0.9337880611419678]
+2025-11-29 10:50:50 [INFO] 
+############## Memproses item 27/30
+2025-11-29 10:50:51 [INFO]   → Retrieval detail:
+2025-11-29 10:50:51 [INFO]     - ###question: type=str, size=194, preview=Kembangkan sebuah panduan untuk pemula...
+2025-11-29 10:50:51 [INFO]     - ###groundtruth_answer: type=str, size=768, preview=Panduan untuk pemula yang ingin...
+2025-11-29 10:50:51 [INFO]     - ###groundtruth_context: type=str, size=3344, preview=Pendekatan ini meningkatkan peluang keberhasilan...
+2025-11-29 10:50:51 [INFO]     - faiss_top10: type=list, size=10, preview=['Pendekatan ini meningkatkan peluang keberhasilan...', 'Kompleksitas dan Persepsi Desain pengalaman...', 'Menghasilkan Ide dan Solusi Kreatif...']
+2025-11-29 10:50:51 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Menghasilkan Ide dan Solusi Kreatif...', 'Pendekatan ini meningkatkan peluang keberhasilan...']
+2025-11-29 10:50:51 [INFO]     - retrieved_ids: type=list, size=2, preview=[77, 72]
+2025-11-29 10:50:51 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[-0.0013971277512609959, 0.03619640693068504, -0.023224199190735817]
+2025-11-29 10:50:51 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.011666991747915745, 0.02804895117878914, -0.017956210300326347]
+2025-11-29 10:50:51 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[0.9066518545150757, 1.0000001192092896]
+2025-11-29 10:50:51 [INFO]     - semantic_scores_current: type=list, size=2, preview=[0.9066518545150757, 1.0000001192092896]
+2025-11-29 10:50:51 [INFO] 
+############## Memproses item 28/30
+2025-11-29 10:50:51 [INFO]   → Retrieval detail:
+2025-11-29 10:50:51 [INFO]     - ###question: type=str, size=164, preview=Rancang sebuah pendekatan yang menggabungkan...
+2025-11-29 10:50:51 [INFO]     - ###groundtruth_answer: type=str, size=975, preview=Untuk merancang pendekatan yang menggabungkan...
+2025-11-29 10:50:51 [INFO]     - ###groundtruth_context: type=str, size=3344, preview=Pendekatan ini meningkatkan peluang keberhasilan...
+2025-11-29 10:50:51 [INFO]     - faiss_top10: type=list, size=10, preview=['Menghasilkan Ide dan Solusi Kreatif...', 'Wawasan ini akan memberi Anda...', 'Pendekatan ini meningkatkan peluang keberhasilan...']
+2025-11-29 10:50:51 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Pendekatan ini meningkatkan peluang keberhasilan...', 'Design thinking mendorong inovasi. Perusahaan...']
+2025-11-29 10:50:51 [INFO]     - retrieved_ids: type=list, size=2, preview=[72, 7]
+2025-11-29 10:50:51 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[0.011666757054626942, 0.028048699721693993, -0.017956260591745377]
+2025-11-29 10:50:51 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.011666991747915745, 0.02804895117878914, -0.017956210300326347]
+2025-11-29 10:50:51 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[1.0000001192092896, 0.8733077645301819]
+2025-11-29 10:50:51 [INFO]     - semantic_scores_current: type=list, size=2, preview=[1.0000001192092896, 0.8733077645301819]
+2025-11-29 10:50:51 [INFO] 
+############## Memproses item 29/30
+2025-11-29 10:50:52 [INFO]   → Retrieval detail:
+2025-11-29 10:50:52 [INFO]     - ###question: type=str, size=148, preview=Susunlah sebuah skenario penggunaan design...
+2025-11-29 10:50:52 [INFO]     - ###groundtruth_answer: type=str, size=750, preview=Skenario penggunaan design thinking untuk...
+2025-11-29 10:50:52 [INFO]     - ###groundtruth_context: type=str, size=3357, preview=Menghasilkan Ide dan Solusi Kreatif...
+2025-11-29 10:50:52 [INFO]     - faiss_top10: type=list, size=10, preview=['Menghasilkan Ide dan Solusi Kreatif...', 'Wawasan ini akan memberi Anda...', 'Design thinking mendorong inovasi. Perusahaan...']
+2025-11-29 10:50:52 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Design thinking mendorong inovasi. Perusahaan...', 'Menghasilkan Ide dan Solusi Kreatif...']
+2025-11-29 10:50:52 [INFO]     - retrieved_ids: type=list, size=2, preview=[7, 77]
+2025-11-29 10:50:52 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[-0.014599154703319073, 0.04528902843594551, -0.011898420751094818]
+2025-11-29 10:50:52 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[-0.0013969680294394493, 0.036196399480104446, -0.02322428487241268]
+2025-11-29 10:50:52 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[0.9199604392051697, 1.0000001192092896]
+2025-11-29 10:50:52 [INFO]     - semantic_scores_current: type=list, size=2, preview=[0.9199604392051697, 1.0000001192092896]
+2025-11-29 10:50:52 [INFO] 
+Mulai tahap LLM generation...
+2025-11-29 10:50:52 [INFO] Penjelasan: LOOP 2 = Menciptakan jawaban berdasarkan pertanyaan dari konteks yang sudah dikumpulkan dan memanggil LLM untuk tiap item.
+2025-11-29 10:50:52 [INFO]   → LLM Memproses item 0/30
+2025-11-29 10:50:52 [INFO]     * prompt_length=7445 chars
+2025-11-29 10:50:52 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 10:50:52 [INFO]   → LLM Memproses item 1/30
+2025-11-29 10:50:52 [INFO]     * prompt_length=7614 chars
+2025-11-29 10:50:52 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 10:50:52 [INFO]   → LLM Memproses item 2/30
+2025-11-29 10:50:52 [INFO]     * prompt_length=7617 chars
+2025-11-29 10:50:52 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 10:50:52 [INFO]   → LLM Memproses item 3/30
+2025-11-29 10:50:52 [INFO]     * prompt_length=7452 chars
+2025-11-29 10:50:52 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 10:50:52 [INFO]   → LLM Memproses item 4/30
+2025-11-29 10:50:52 [INFO]     * prompt_length=7485 chars
+2025-11-29 10:50:52 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 10:50:52 [INFO]   → LLM Memproses item 5/30
+2025-11-29 10:50:52 [INFO]     * prompt_length=7657 chars
+2025-11-29 10:50:52 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 10:50:52 [INFO]   → LLM Memproses item 6/30
+2025-11-29 10:50:52 [INFO]     * prompt_length=7506 chars
+2025-11-29 10:50:52 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 10:50:52 [INFO]   → LLM Memproses item 7/30
+2025-11-29 10:50:52 [INFO]     * prompt_length=7521 chars
+2025-11-29 10:50:52 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 10:50:52 [INFO]   → LLM Memproses item 8/30
+2025-11-29 10:50:52 [INFO]     * prompt_length=7556 chars
+2025-11-29 10:50:52 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 10:50:52 [INFO]   → LLM Memproses item 9/30
+2025-11-29 10:50:52 [INFO]     * prompt_length=6955 chars
+2025-11-29 10:50:52 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 10:50:52 [INFO]   → LLM Memproses item 10/30
+2025-11-29 10:50:52 [INFO]     * prompt_length=7515 chars
+2025-11-29 10:50:52 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 10:50:52 [INFO]   → LLM Memproses item 11/30
+2025-11-29 10:50:52 [INFO]     * prompt_length=7548 chars
+2025-11-29 10:50:52 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 10:50:52 [INFO]   → LLM Memproses item 12/30
+2025-11-29 10:50:52 [INFO]     * prompt_length=3773 chars
+2025-11-29 10:50:52 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 10:50:52 [INFO]   → LLM Memproses item 13/30
+2025-11-29 10:50:52 [INFO]     * prompt_length=7264 chars
+2025-11-29 10:50:52 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 10:50:52 [INFO]   → LLM Memproses item 14/30
+2025-11-29 10:50:52 [INFO]     * prompt_length=6181 chars
+2025-11-29 10:50:52 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 10:50:52 [INFO]   → LLM Memproses item 15/30
+2025-11-29 10:50:52 [INFO]     * prompt_length=7638 chars
+2025-11-29 10:50:52 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 10:50:52 [INFO]   → LLM Memproses item 16/30
+2025-11-29 10:50:52 [INFO]     * prompt_length=7601 chars
+2025-11-29 10:50:52 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 10:50:52 [INFO]   → LLM Memproses item 17/30
+2025-11-29 10:50:52 [INFO]     * prompt_length=7565 chars
+2025-11-29 10:50:52 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 10:50:52 [INFO]   → LLM Memproses item 18/30
+2025-11-29 10:50:52 [INFO]     * prompt_length=7581 chars
+2025-11-29 10:50:52 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 10:50:52 [INFO]   → LLM Memproses item 19/30
+2025-11-29 10:50:52 [INFO]     * prompt_length=7652 chars
+2025-11-29 10:50:52 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 10:50:52 [INFO]   → LLM Memproses item 20/30
+2025-11-29 10:50:52 [INFO]     * prompt_length=7550 chars
+2025-11-29 10:50:52 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 10:50:52 [INFO]   → LLM Memproses item 21/30
+2025-11-29 10:50:52 [INFO]     * prompt_length=7514 chars
+2025-11-29 10:50:52 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 10:50:52 [INFO]   → LLM Memproses item 22/30
+2025-11-29 10:50:52 [INFO]     * prompt_length=7596 chars
+2025-11-29 10:50:52 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 10:50:52 [INFO]   → LLM Memproses item 23/30
+2025-11-29 10:50:52 [INFO]     * prompt_length=7527 chars
+2025-11-29 10:50:52 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 10:50:52 [INFO]   → LLM Memproses item 24/30
+2025-11-29 10:50:52 [INFO]     * prompt_length=7446 chars
+2025-11-29 10:50:52 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 10:50:52 [INFO]   → LLM Memproses item 25/30
+2025-11-29 10:50:52 [INFO]     * prompt_length=7672 chars
+2025-11-29 10:50:52 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 10:50:52 [INFO]   → LLM Memproses item 26/30
+2025-11-29 10:50:52 [INFO]     * prompt_length=7559 chars
+2025-11-29 10:50:52 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 10:50:52 [INFO]   → LLM Memproses item 27/30
+2025-11-29 10:50:52 [INFO]     * prompt_length=7547 chars
+2025-11-29 10:50:52 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 10:50:52 [INFO]   → LLM Memproses item 28/30
+2025-11-29 10:50:52 [INFO]     * prompt_length=7576 chars
+2025-11-29 10:50:52 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 10:50:52 [INFO]   → LLM Memproses item 29/30
+2025-11-29 10:50:52 [INFO]     * prompt_length=7573 chars
+2025-11-29 10:50:52 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 10:50:52 [INFO]   → Menjalankan batch async ke endpoint http://localhost:11434 (model=gemma:7b-instruct), batch_size=6)
+2025-11-29 10:50:52 [INFO] [OLLAMA] Memproses batch 1...
+2025-11-29 10:51:04 [INFO] [OLLAMA] Memproses batch 2...
+2025-11-29 10:51:20 [INFO] [OLLAMA] Memproses batch 3...
+2025-11-29 10:51:38 [INFO] [OLLAMA] Memproses batch 4...
+2025-11-29 10:52:02 [INFO] [OLLAMA] Memproses batch 5...
+2025-11-29 10:52:36 [INFO]     - predictions_sample: type=list, size=30, preview=['Desain pengalaman pengguna (UX) adalah...', 'Desainer pengalaman pengguna adalah seseorang...', 'Desainer pengalaman pengguna adalah seseorang...']
+2025-11-29 10:52:36 [INFO] Menjalankan RAGAS evaluation...
+2025-11-29 10:52:36 [INFO] [HEARTBEAT] RAGAS masih berjalan...
+2025-11-29 10:52:38 [INFO] [RAGAS] Memproses item 1/30
+2025-11-29 10:52:38 [INFO] [RAGAS] Memproses item 2/30
+2025-11-29 10:52:41 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 10:52:42 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 10:52:45 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 10:52:46 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 10:52:48 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 10:52:50 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 10:52:51 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 10:52:54 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 10:52:56 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 10:52:57 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 10:53:04 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 10:53:05 [INFO] Retrying request to /embeddings in 0.463081 seconds
+2025-11-29 10:53:06 [INFO] HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-11-29 10:53:08 [INFO] Retrying request to /embeddings in 0.432064 seconds
+2025-11-29 10:53:10 [INFO] HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-11-29 10:53:11 [INFO] Retrying request to /chat/completions in 0.401405 seconds
+2025-11-29 10:53:12 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 10:53:13 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 10:53:15 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 10:53:17 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 10:53:18 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 10:53:20 [INFO] Retrying request to /embeddings in 0.433295 seconds
+2025-11-29 10:53:21 [INFO] HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-11-29 10:53:23 [INFO] Retrying request to /embeddings in 0.408611 seconds
+2025-11-29 10:53:25 [INFO] HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-11-29 10:53:27 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 10:53:29 [INFO] Retrying request to /chat/completions in 0.491271 seconds
+2025-11-29 10:53:29 [INFO] HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-11-29 10:53:31 [INFO] HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-11-29 10:53:32 [INFO] [RAGAS] Memproses item 3/30

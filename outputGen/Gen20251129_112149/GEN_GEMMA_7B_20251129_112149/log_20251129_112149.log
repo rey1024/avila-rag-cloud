@@ -1,0 +1,206 @@
+2025-11-29 11:21:49 [INFO] ================= Menjalankan GEN_GEMMA_7B ============================
+2025-11-29 11:21:49 [INFO]     - experiment_config: type=dict, size=3, preview={'id': 'GEN_GEMMA_7B', 'active': 'True', 'llm': "{'provider': 'ollama', 'model': 'gemma:7b-instruct', 'max_tokens':..."}
+2025-11-29 11:21:49 [INFO] ✔ FAISS index loaded: outputsRetrieval/20251125_083908/SEM_E5_20251125_083908/faiss/index.faiss
+2025-11-29 11:21:49 [INFO] ✔ Chunks from FAISS loaded: 97 chunks available
+2025-11-29 11:21:49 [INFO] ✔ Dataset loaded from: dataset_evaluation/validation_20251124_101649.xlsx (items=6)
+2025-11-29 11:21:49 [INFO] ✔ LLM setup -> provider: ollama, model: gemma:7b-instruct, endpoint: http://localhost:11434, mode: Ollama (local)
+2025-11-29 11:21:49 [INFO] • Pre-encoding all chunks for diagnostics...
+2025-11-29 11:21:50 [INFO] ✔ Pre-encoding done
+2025-11-29 11:21:50 [INFO]     - chunk_embs_shape: type=tuple, size=2, preview=[97, 768]
+2025-11-29 11:21:50 [INFO] Mulai proses 6 item...
+2025-11-29 11:21:50 [INFO] Penjelasan: LOOP 1 = retrieval + diagnostics (tidak ada pemanggilan LLM).
+2025-11-29 11:21:50 [INFO] 
+############## Memproses item 0/6
+2025-11-29 11:21:51 [INFO]   → Retrieval detail:
+2025-11-29 11:21:51 [INFO]     - ###question: type=str, size=57, preview=Apa yang dimaksud dengan desain...
+2025-11-29 11:21:51 [INFO]     - ###groundtruth_answer: type=str, size=136, preview=Desain pengalaman pengguna berfokus pada...
+2025-11-29 11:21:51 [INFO]     - ###groundtruth_context: type=str, size=3392, preview=Kompleksitas dan Persepsi Desain pengalaman...
+2025-11-29 11:21:51 [INFO]     - faiss_top10: type=list, size=10, preview=['Kompleksitas dan Persepsi Desain pengalaman...', 'Pendekatan ini meningkatkan peluang keberhasilan...', 'UI design umumnya mengacu pada...']
+2025-11-29 11:21:51 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Kompleksitas dan Persepsi Desain pengalaman...', 'Pendekatan ini meningkatkan peluang keberhasilan...']
+2025-11-29 11:21:51 [INFO]     - retrieved_ids: type=list, size=2, preview=[71, 72]
+2025-11-29 11:21:51 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[0.006878828164190054, 0.05218103155493736, -0.010217214934527874]
+2025-11-29 11:21:51 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.006878955755382776, 0.05218098312616348, -0.010217210277915001]
+2025-11-29 11:21:51 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[1.0, 0.9337877631187439]
+2025-11-29 11:21:51 [INFO]     - semantic_scores_current: type=list, size=2, preview=[1.0, 0.9337877631187439]
+2025-11-29 11:21:51 [INFO] 
+############## Memproses item 1/6
+2025-11-29 11:21:52 [INFO]   → Retrieval detail:
+2025-11-29 11:21:52 [INFO]     - ###question: type=str, size=99, preview=Mengapa penting untuk memiliki pemahaman...
+2025-11-29 11:21:52 [INFO]     - ###groundtruth_answer: type=str, size=295, preview=Penting untuk memiliki pemahaman dasar...
+2025-11-29 11:21:52 [INFO]     - ###groundtruth_context: type=str, size=3392, preview=Kompleksitas dan Persepsi Desain pengalaman...
+2025-11-29 11:21:52 [INFO]     - faiss_top10: type=list, size=10, preview=['Kompleksitas dan Persepsi Desain pengalaman...', 'Pendekatan ini meningkatkan peluang keberhasilan...', 'Menghasilkan Ide dan Solusi Kreatif...']
+2025-11-29 11:21:52 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Kompleksitas dan Persepsi Desain pengalaman...', 'Tokoh besar dalam bidang pengalaman...']
+2025-11-29 11:21:52 [INFO]     - retrieved_ids: type=list, size=2, preview=[71, 76]
+2025-11-29 11:21:52 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[0.006878828164190054, 0.05218103155493736, -0.010217214934527874]
+2025-11-29 11:21:52 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.006878955755382776, 0.05218098312616348, -0.010217210277915001]
+2025-11-29 11:21:52 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[1.0, 0.8765329122543335]
+2025-11-29 11:21:52 [INFO]     - semantic_scores_current: type=list, size=2, preview=[1.0, 0.8765329122543335]
+2025-11-29 11:21:52 [INFO] 
+############## Memproses item 2/6
+2025-11-29 11:21:52 [INFO]   → Retrieval detail:
+2025-11-29 11:21:52 [INFO]     - ###question: type=str, size=127, preview=Bagaimana seorang desainer pengalaman pengguna...
+2025-11-29 11:21:52 [INFO]     - ###groundtruth_answer: type=str, size=285, preview=Seorang desainer pengalaman pengguna dapat...
+2025-11-29 11:21:52 [INFO]     - ###groundtruth_context: type=str, size=3392, preview=Kompleksitas dan Persepsi Desain pengalaman...
+2025-11-29 11:21:52 [INFO]     - faiss_top10: type=list, size=10, preview=['Kompleksitas dan Persepsi Desain pengalaman...', 'Pendekatan ini meningkatkan peluang keberhasilan...', 'Agar sebuah desain berhasil, Anda...']
+2025-11-29 11:21:52 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Kompleksitas dan Persepsi Desain pengalaman...', 'Pendekatan ini meningkatkan peluang keberhasilan...']
+2025-11-29 11:21:52 [INFO]     - retrieved_ids: type=list, size=2, preview=[71, 72]
+2025-11-29 11:21:52 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[0.006878828164190054, 0.05218103155493736, -0.010217214934527874]
+2025-11-29 11:21:52 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.006878955755382776, 0.05218098312616348, -0.010217210277915001]
+2025-11-29 11:21:52 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[1.0, 0.9337877631187439]
+2025-11-29 11:21:52 [INFO]     - semantic_scores_current: type=list, size=2, preview=[1.0, 0.9337877631187439]
+2025-11-29 11:21:52 [INFO] 
+############## Memproses item 3/6
+2025-11-29 11:21:53 [INFO]   → Retrieval detail:
+2025-11-29 11:21:53 [INFO]     - ###question: type=str, size=128, preview=Analisis bagaimana desain berpusat pada...
+2025-11-29 11:21:53 [INFO]     - ###groundtruth_answer: type=str, size=929, preview=Desain berpusat pada pengguna dan...
+2025-11-29 11:21:53 [INFO]     - ###groundtruth_context: type=str, size=3297, preview=Wawasan ini akan memberi Anda...
+2025-11-29 11:21:53 [INFO]     - faiss_top10: type=list, size=10, preview=['Pendekatan ini meningkatkan peluang keberhasilan...', 'Menghasilkan Ide dan Solusi Kreatif...', 'Misalnya, survei daring dapat digunakan...']
+2025-11-29 11:21:53 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Tokoh besar dalam bidang pengalaman...', 'Pendekatan ini meningkatkan peluang keberhasilan...']
+2025-11-29 11:21:53 [INFO]     - retrieved_ids: type=list, size=2, preview=[76, 72]
+2025-11-29 11:21:53 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[-0.024442607536911964, 0.040596362203359604, -0.017491882666945457]
+2025-11-29 11:21:53 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[-0.006219025701284409, 0.05074326694011688, -0.001868042047135532]
+2025-11-29 11:21:53 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[0.8989713191986084, 0.9048846960067749]
+2025-11-29 11:21:53 [INFO]     - semantic_scores_current: type=list, size=2, preview=[0.8989713191986084, 0.9048846960067749]
+2025-11-29 11:21:53 [INFO] 
+############## Memproses item 4/6
+2025-11-29 11:21:54 [INFO]   → Retrieval detail:
+2025-11-29 11:21:54 [INFO]     - ###question: type=str, size=116, preview=Evaluasi pentingnya prinsip UX dalam...
+2025-11-29 11:21:54 [INFO]     - ###groundtruth_answer: type=str, size=166, preview=Penggunaan prinsip UX secara tepat...
+2025-11-29 11:21:54 [INFO]     - ###groundtruth_context: type=str, size=3344, preview=Pendekatan ini meningkatkan peluang keberhasilan...
+2025-11-29 11:21:54 [INFO]     - faiss_top10: type=list, size=10, preview=['Pendekatan ini meningkatkan peluang keberhasilan...', 'Standar ISO 9241-11 mendefinisikan usability...', 'Contoh: Kios informasi bandara mudah...']
+2025-11-29 11:21:54 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Pendekatan ini meningkatkan peluang keberhasilan...', 'Standar ISO 9241-11 mendefinisikan usability...']
+2025-11-29 11:21:54 [INFO]     - retrieved_ids: type=list, size=2, preview=[72, 81]
+2025-11-29 11:21:54 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[0.011666757054626942, 0.028048699721693993, -0.017956260591745377]
+2025-11-29 11:21:54 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.011666991747915745, 0.02804895117878914, -0.017956210300326347]
+2025-11-29 11:21:54 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[1.0000001192092896, 0.9036033749580383]
+2025-11-29 11:21:54 [INFO]     - semantic_scores_current: type=list, size=2, preview=[1.0000001192092896, 0.9036033749580383]
+2025-11-29 11:21:54 [INFO] 
+############## Memproses item 5/6
+2025-11-29 11:21:55 [INFO]   → Retrieval detail:
+2025-11-29 11:21:55 [INFO]     - ###question: type=str, size=162, preview=Rancang sebuah pendekatan yang menggabungkan...
+2025-11-29 11:21:55 [INFO]     - ###groundtruth_answer: type=str, size=720, preview=Untuk meningkatkan pengalaman pengguna dalam...
+2025-11-29 11:21:55 [INFO]     - ###groundtruth_context: type=str, size=3344, preview=Pendekatan ini meningkatkan peluang keberhasilan...
+2025-11-29 11:21:55 [INFO]     - faiss_top10: type=list, size=10, preview=['Menghasilkan Ide dan Solusi Kreatif...', 'Pendekatan ini meningkatkan peluang keberhasilan...', 'Wawasan ini akan memberi Anda...']
+2025-11-29 11:21:55 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Pendekatan ini meningkatkan peluang keberhasilan...', 'Tokoh besar dalam bidang pengalaman...']
+2025-11-29 11:21:55 [INFO]     - retrieved_ids: type=list, size=2, preview=[72, 76]
+2025-11-29 11:21:55 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[0.011666757054626942, 0.028048699721693993, -0.017956260591745377]
+2025-11-29 11:21:55 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.011666991747915745, 0.02804895117878914, -0.017956210300326347]
+2025-11-29 11:21:55 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[1.0000001192092896, 0.8825364112854004]
+2025-11-29 11:21:55 [INFO]     - semantic_scores_current: type=list, size=2, preview=[1.0000001192092896, 0.8825364112854004]
+2025-11-29 11:21:55 [INFO] 
+Mulai tahap LLM generation...
+2025-11-29 11:21:55 [INFO] Penjelasan: LOOP 2 = Menciptakan jawaban berdasarkan pertanyaan dari konteks yang sudah dikumpulkan dan memanggil LLM untuk tiap item.
+2025-11-29 11:21:55 [INFO]   → LLM Memproses item 0/6
+2025-11-29 11:21:55 [INFO]     * prompt_length=7445 chars
+2025-11-29 11:21:55 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 11:21:55 [INFO]   → LLM Memproses item 1/6
+2025-11-29 11:21:55 [INFO]     * prompt_length=7657 chars
+2025-11-29 11:21:55 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 11:21:55 [INFO]   → LLM Memproses item 2/6
+2025-11-29 11:21:55 [INFO]     * prompt_length=7515 chars
+2025-11-29 11:21:55 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 11:21:55 [INFO]   → LLM Memproses item 3/6
+2025-11-29 11:21:55 [INFO]     * prompt_length=7638 chars
+2025-11-29 11:21:55 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 11:21:55 [INFO]   → LLM Memproses item 4/6
+2025-11-29 11:21:55 [INFO]     * prompt_length=7550 chars
+2025-11-29 11:21:55 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 11:21:55 [INFO]   → LLM Memproses item 5/6
+2025-11-29 11:21:55 [INFO]     * prompt_length=7672 chars
+2025-11-29 11:21:55 [INFO]     * prompt_preview= Anda adalah generator jawaban berbasis konteks.  Aturan: 1. Jawaban harus sepenuhnya berasal dari konteks. 2. Tidak boleh menambah asumsi, generalisasi, atau informasi baru. 3. Gunakan kalimat dari konteks sejauh mungkin. 4. Jika perlu parafrase, gunakan parafrase minimal tanpa mengubah makna. 5. T
+2025-11-29 11:21:55 [INFO]   → Menjalankan batch async ke endpoint http://localhost:11434 (model=gemma:7b-instruct), batch_size=6)
+2025-11-29 11:21:55 [INFO] [OLLAMA] Memproses batch 1...
+2025-11-29 11:22:13 [INFO]     - predictions_sample: type=list, size=6, preview=['Desain pengalaman pengguna (UX) adalah...', "Pemahaman dasar mengenai istilah 'pengalaman...", 'Desainer pengalaman pengguna dapat memastikan...']
+2025-11-29 11:22:13 [INFO] Menjalankan RAGAS evaluation...
+2025-11-29 11:22:15 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:22:16 [WARNING] LLM returned 1 generations instead of requested 3. Proceeding with 1 generations.
+2025-11-29 11:22:18 [INFO] HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-11-29 11:22:19 [INFO] HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-11-29 11:22:26 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:22:26 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:22:26 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:22:26 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:22:26 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:22:26 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:22:26 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:22:26 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:22:26 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:22:26 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:22:26 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:22:26 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:22:55 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:22:55 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:22:58 [WARNING] LLM returned 1 generations instead of requested 3. Proceeding with 1 generations.
+2025-11-29 11:23:00 [INFO] HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-11-29 11:23:09 [INFO] HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-11-29 11:23:10 [INFO] Retrying request to /chat/completions in 0.450077 seconds
+2025-11-29 11:23:10 [INFO] Retrying request to /chat/completions in 0.394685 seconds
+2025-11-29 11:23:12 [WARNING] LLM returned 1 generations instead of requested 3. Proceeding with 1 generations.
+2025-11-29 11:23:19 [INFO] HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-11-29 11:23:21 [INFO] HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-11-29 11:23:23 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:23:23 [WARNING] LLM returned 1 generations instead of requested 3. Proceeding with 1 generations.
+2025-11-29 11:23:25 [INFO] HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-11-29 11:23:26 [INFO] HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-11-29 11:23:27 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:23:27 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:23:27 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:23:27 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:23:27 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:23:27 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:23:27 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:23:27 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:23:27 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:23:27 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:23:27 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:23:27 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:23:51 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:23:51 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:23:51 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:24:06 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:24:14 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:24:29 [INFO] HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-11-29 11:24:32 [INFO] HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-11-29 11:24:35 [INFO] Retrying request to /chat/completions in 0.494176 seconds
+2025-11-29 11:24:35 [INFO] Retrying request to /chat/completions in 0.487567 seconds
+2025-11-29 11:24:35 [INFO] Retrying request to /chat/completions in 0.474805 seconds
+2025-11-29 11:24:35 [INFO] Retrying request to /chat/completions in 0.408161 seconds
+2025-11-29 11:24:35 [INFO] Retrying request to /chat/completions in 0.480774 seconds
+2025-11-29 11:24:35 [INFO] Retrying request to /chat/completions in 0.375264 seconds
+2025-11-29 11:24:35 [INFO] Retrying request to /chat/completions in 0.413188 seconds
+2025-11-29 11:24:38 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:24:40 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:24:40 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:24:40 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:24:40 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:24:40 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:24:41 [WARNING] LLM returned 1 generations instead of requested 3. Proceeding with 1 generations.
+2025-11-29 11:24:43 [INFO] HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-11-29 11:24:44 [INFO] HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-11-29 11:24:50 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:24:50 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:24:50 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:24:50 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:24:50 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:24:50 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:25:15 [ERROR] Exception raised in Job[4]: TimeoutError()
+2025-11-29 11:25:15 [ERROR] Exception raised in Job[14]: TimeoutError()
+2025-11-29 11:25:15 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:25:15 [ERROR] Exception raised in Job[9]: TimeoutError()
+2025-11-29 11:25:15 [INFO] Retrying request to /chat/completions in 0.904316 seconds
+2025-11-29 11:25:29 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:25:33 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:25:40 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:25:42 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:25:45 [INFO] HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-11-29 11:25:45 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:25:53 [INFO] HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-11-29 11:25:54 [INFO] HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-11-29 11:25:56 [INFO] HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-11-29 11:25:56 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:25:58 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-29 11:26:01 [INFO] HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-11-29 11:26:02 [INFO] HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-11-29 11:26:07 [INFO] ..Selesai...
+
+
