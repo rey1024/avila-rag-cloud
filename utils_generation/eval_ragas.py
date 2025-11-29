@@ -51,10 +51,7 @@ def run_ragas_evaluation(questions, predictions, contexts_used, references, open
     )
     ragas_embed.client.batch_size = 128
 
-    clean_references = [
-        ref if isinstance(ref, str) and len(ref.strip()) > 0 else "N/A"
-        for ref in references
-    ]
+
     # ---------------------------------
     # DATASET RAGAS
     # ---------------------------------
@@ -62,7 +59,7 @@ def run_ragas_evaluation(questions, predictions, contexts_used, references, open
         "question": questions,
         "answer": predictions,
         "contexts": contexts_used,
-        "ground_truth": clean_references
+        "ground_truth": references
     })
 
     metrics = [

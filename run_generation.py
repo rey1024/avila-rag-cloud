@@ -33,6 +33,10 @@ from utils_generation.io_utils import *
 from utils_generation.rag_utils import *
 from utils_generation.llm_utils import *
 
+import gc
+
+
+
 # ===============================================================
 # 0. LOAD ENV
 # ===============================================================
@@ -41,17 +45,15 @@ load_dotenv()
 print("✔ Env loaded from .env")
 
 def run_generation(exp, master, timestamp):
-    # Setup logging
-    log_dir = f"outputGen/Gen{timestamp}/{exp['id']}_{timestamp}"
-    ensure_dir(log_dir)
-    log_file = f"{log_dir}/log_{timestamp}.log"
+     # Setup logging
+
     # logging.basicConfig(
     #     filename=log_file,
     #     level=logging.INFO,
     #     format='%(asctime)s - %(levelname)s - %(message)s',
     #     datefmt='%Y-%m-%d %H:%M:%S'
     # )
-    setup_logging(log_file)
+    setup_logging(exp,timestamp)
 
     logging.info(f"================= Menjalankan {exp['id']} ============================")
     log_var("experiment_config", exp)
@@ -153,9 +155,9 @@ def run_generation(exp, master, timestamp):
 
         q      = item["question"]
         gt     = item["groundtruth_answer"]
-        gt_ctx = find_gt_chunk(gt, chunks, embedder)
+        #gt_ctx = find_gt_chunk(gt, chunks, embedder)
 
-        #gt_ctx = item["context"]
+        gt_ctx = item["context"]
 
 
         faiss_queries.append(q)   # log query yang dikirim ke faiss
@@ -236,7 +238,10 @@ def run_generation(exp, master, timestamp):
         rank = int(np.where(sorted_rank == best_idx)[0][0]) + 1
         gt_chunk_rank.append(rank)
         gt_chunk_rr.append(round(1.0 / rank, 4))
-
+    
+    import gc
+    gc.collect()
+    torch.cuda.empty_cache()
     # =====================================================
     # LOOP 2: LLM generation (paralel untuk Ollama)
     # =====================================================
@@ -308,8 +313,6 @@ def run_generation(exp, master, timestamp):
     )
 
     import gc
-    
-
     gc.collect()
     torch.cuda.empty_cache()
 
@@ -324,7 +327,8 @@ def run_generation(exp, master, timestamp):
         retrieval_hits, semantic_scores,
         embedder,
         gt_chunk_ids, gt_chunk_retrieved, gt_chunk_rank, gt_chunk_rr, gt_topk_sims,
-        faiss_queries   # <=== tambahan
+        faiss_queries,
+        chunk_embs
     )
 
 # ===============================================================
@@ -361,10 +365,14 @@ def main():
             embedder,
             gt_chunk_ids, gt_chunk_retrieved, gt_chunk_rank,
             gt_chunk_rr, gt_topk_sims,
-            faiss_queries
+            faiss_queries,
+            chunk_embs
         ) = result
 
         out_dir = auto_output_folder(exp_id, timestamp)
+        embedder = embedder.to("cpu")
+        torch.cuda.empty_cache()
+        gc.collect()
 
         excel = save_excel_report(
             exp_id, out_dir, timestamp,
@@ -379,7 +387,8 @@ def main():
             gt_chunk_ids, gt_chunk_retrieved,
             gt_chunk_rank, gt_chunk_rr,
             gt_topk_sims,
-            faiss_queries          
+            faiss_queries,
+            chunk_embs,          
         )
 
         summary[exp_id] = {

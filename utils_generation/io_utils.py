@@ -22,6 +22,7 @@ import seaborn as sns
 
 import requests
 import openpyxl
+global_results_generation_path = "results/generation"
 
 def load_yaml(path):
     with open(path, "r", encoding="utf-8") as f:
@@ -39,7 +40,10 @@ def fmt(v, d=2):
         return 0.0
 
 
-def setup_logging(log_file):
+def setup_logging(exp, timestamp):
+    log_dir = f"{global_results_generation_path}/Gen{timestamp}/{exp['id']}_{timestamp}"
+    ensure_dir(log_dir)
+    log_file = f"{log_dir}/log_{timestamp}.log"
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
 
@@ -68,6 +72,7 @@ def setup_logging(log_file):
 
 def log_var(name, v, preview=200):
     """Log a compact summary of a variable: type, size/shape and a small preview."""
+    logger = logging.getLogger(__name__)
     try:
         t = type(v).__name__
         size = None
@@ -123,9 +128,9 @@ def log_var(name, v, preview=200):
             except Exception:
                 preview_val = str(v)[:preview]
 
-        logging.info(f"    - {name}: type={t}, size={size}, preview={preview_val}")
+        logger.info(f"    - {name}: type={t}, size={size}, preview={preview_val}")
     except Exception as e:
-        logging.info(f"    - {name}: (error summarizing: {e})")
+        logger.info(f"    - {name}: (error summarizing: {e})")
 
 def get_timestamp():
     return datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -153,7 +158,7 @@ def load_eval_dataset(path):
     #Ambil 5 item per bloomlevel
     df = (
         df.groupby("bloomlevel")
-        .head(5)
+        .head(2)
         .reset_index(drop=True)
     )
 
@@ -200,7 +205,8 @@ def save_excel_report(
     gt_chunk_rank,
     gt_chunk_rr,
     gt_topk_sims,
-    faiss_queries   # <=== baru
+    faiss_queries,
+    existing_chunk_embs
 
 ):
 
@@ -257,10 +263,22 @@ def save_excel_report(
     # -------------------------
     # CHUNKS SHEET
     # -------------------------
-    chunk_embs = to_numpy(embedder.encode(chunks, normalize_embeddings=True))
+    #chunk_embs = to_numpy(embedder.encode(chunks, normalize_embeddings=True))
+    chunk_embs = existing_chunk_embs   # dari run_generation()
 
-    context_embs = embedder.encode(df_source["context"].tolist(), normalize_embeddings=True)
-    sim_mat = util.cos_sim(chunk_embs, context_embs).cpu().numpy()
+    #context_embs = embedder.encode(df_source["context"].tolist(), normalize_embeddings=True)
+    context_embs = embedder.encode(
+        df_source["context"].tolist(),
+        normalize_embeddings=True,
+        convert_to_numpy=True
+    )
+
+    #
+    
+    sim_mat = util.cos_sim(
+        torch.tensor(chunk_embs),
+        torch.tensor(context_embs)
+    ).cpu().numpy()
 
     df_chunks = pd.DataFrame({
         "chunk_id": range(1, len(chunks)+1),
@@ -270,14 +288,144 @@ def save_excel_report(
         "top_groundtruth_similarity": sim_mat.max(axis=1)
     })
 
+    # ======================================================================
+    # Tambahan Visualisasi untuk Excel
+    # ======================================================================
+
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    from openpyxl.drawing.image import Image as XLImage
+    import numpy as np
+    import io
+
+    # ------------------------------------------------------------
+    # STEP 1: assign bloom level dominan untuk setiap chunk
+    # ------------------------------------------------------------
+    nearest_bloom = []
+    for i in range(sim_mat.shape[0]):
+        j = np.argmax(sim_mat[i])  # context yang paling mirip
+        nearest_bloom.append(df_source["bloomlevel"].iloc[j])
+
+    df_chunks["nearest_bloom"] = nearest_bloom
+    # ============================================================
+    # SET BLOOM ORDER
+    # ============================================================
+    bloom_order = [
+        "1. Remember",
+        "2. Understand",
+        "3. Apply",
+        "4. Analyze",
+        "5. Evaluate",
+        "6. Create",
+    ]
+
+    df_chunks["nearest_bloom"] = pd.Categorical(
+        df_chunks["nearest_bloom"],
+        categories=bloom_order,
+        ordered=True
+    )
+
+    # ------------------------------------------------------------
+    # STEP 2: Buat folder grafik
+    # ------------------------------------------------------------
+    plot_dir = f"{out_dir}/plots"
+    os.makedirs(plot_dir, exist_ok=True)
+
+    # ------------------------------------------------------------
+    # STEP 3-A: BOX PLOT
+    # ------------------------------------------------------------
+    plt.figure(figsize=(10,6))
+    sns.boxplot(
+        data=df_chunks,
+        x="nearest_bloom",
+        y="top_groundtruth_similarity"
+    )
+    plt.xlabel("Bloom Level (nearest groundtruth)")
+    plt.ylabel("Top Groundtruth Similarity")
+    plt.title("Boxplot Top Groundtruth Similarity per Bloom Level")
+    plt.tight_layout()
+
+    boxplot_path = f"{plot_dir}/boxplot_similarity_per_bloom.png"
+    plt.savefig(boxplot_path, dpi=300)
+    plt.close()
+
+
+    # ------------------------------------------------------------
+    # STEP 3-B: VIOLIN PLOT
+    # ------------------------------------------------------------
+    plt.figure(figsize=(10,6))
+    sns.violinplot(
+        data=df_chunks,
+        x="nearest_bloom",
+        y="top_groundtruth_similarity",
+        inner="quartile"
+    )
+    plt.xlabel("Bloom Level (nearest groundtruth)")
+    plt.ylabel("Top Groundtruth Similarity")
+    plt.title("Violin Plot Similarity per Bloom Level")
+    plt.tight_layout()
+
+    violin_path = f"{plot_dir}/violin_similarity_per_bloom.png"
+    plt.savefig(violin_path, dpi=300)
+    plt.close()
+
+
+    # ------------------------------------------------------------
+    # STEP 3-C: HEATMAP RINGKAS
+    # (median similarity tiap Bloom dikali chunk range)
+    # ------------------------------------------------------------
+    pivot = df_chunks.pivot_table(
+        index="nearest_bloom",
+        values="top_groundtruth_similarity",
+        aggfunc="median"
+    ).sort_index()
+
+    plt.figure(figsize=(6,4))
+    sns.heatmap(
+        pivot.T,
+        annot=True,
+        cmap="viridis",
+        fmt=".2f"
+    )
+    plt.title("Median Similarity per Bloom Level")
+    plt.tight_layout()
+
+    heatmap_path = f"{plot_dir}/heatmap_similarity_per_bloom.png"
+    plt.savefig(heatmap_path, dpi=300)
+    plt.close()
+
+
+    # ------------------------------------------------------------
+    # STEP 4: summary statistik ke DataFrame
+    # ------------------------------------------------------------
+    df_bloom_summary = df_chunks.groupby("nearest_bloom")["top_groundtruth_similarity"].describe()
+    df_bloom_summary.reset_index(inplace=True)
+
     # -------------------------
     # Write
     # -------------------------
     with pd.ExcelWriter(excel_path, engine="openpyxl") as w:
-        df_items.to_excel(w, index=False, sheet_name="results")
         df_sum.to_excel(w, index=False, sheet_name="summary")
+        df_items.to_excel(w, index=False, sheet_name="results")
         df_chunks.to_excel(w, index=False, sheet_name="chunks")
 
+        # sheet baru: Bloom Summary
+        df_bloom_summary.to_excel(w, index=False, sheet_name="bloom_summary")
+
+        # sheet baru: Visualizations
+        ws = w.book.create_sheet("visualizations")
+
+        # masukkan gambar boxplot
+        img1 = XLImage(boxplot_path)
+        ws.add_image(img1, "A1")
+
+        # masukkan gambar violinplot
+        img2 = XLImage(violin_path)
+        ws.add_image(img2, "A30")
+
+        # masukkan heatmap
+        img3 = XLImage(heatmap_path)
+        ws.add_image(img3, "A60")
         # ----------------------------------------
         # APPLY FORMATTING (wrap, align, auto width)
         # ----------------------------------------
@@ -341,7 +489,7 @@ def load_pdf_texts(pdf_dir):
     return "\n".join(texts)
 
 def auto_output_folder(exp_id, timestamp):
-    folder = f"outputGen/Gen{timestamp}/{exp_id}_{timestamp}"
+    folder = f"{global_results_generation_path}/Gen{timestamp}/{exp_id}_{timestamp}"
     ensure_dir(folder)
     return folder
 
@@ -376,7 +524,7 @@ def save_global_summary(summary_dict, timestamp):
 
     df = pd.DataFrame(rows)
 
-    out_path = f"outputGen/Gen{timestamp}/summary_all_{timestamp}.xlsx"
+    out_path = f"{global_results_generation_path}/Gen{timestamp}/summary_all_{timestamp}.xlsx"
 
     with pd.ExcelWriter(out_path, engine="openpyxl") as w:
         df.to_excel(w, index=False, sheet_name="summary_all")
