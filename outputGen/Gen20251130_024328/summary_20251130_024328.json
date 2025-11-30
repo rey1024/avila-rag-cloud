@@ -1,0 +1,50 @@
+{
+  "GEN_GPT4oMini": {
+    "status": "ok",
+    "output_dir": "results/generation/Gen20251130_024328/GEN_GPT4oMini_20251130_024328",
+    "excel": "results/generation/Gen20251130_024328/GEN_GPT4oMini_20251130_024328/GEN_GPT4oMini_20251130_024328.xlsx",
+    "scores": {
+      "context_precision": 1.0,
+      "context_recall": 0.938,
+      "answer_relevancy": 0.435,
+      "faithfulness": 0.5,
+      "answer_correctness": 0.473
+    }
+  },
+  "GEN_GEMMA_7B": {
+    "status": "ok",
+    "output_dir": "results/generation/Gen20251130_024328/GEN_GEMMA_7B_20251130_024328",
+    "excel": "results/generation/Gen20251130_024328/GEN_GEMMA_7B_20251130_024328/GEN_GEMMA_7B_20251130_024328.xlsx",
+    "scores": {
+      "context_precision": 1.0,
+      "context_recall": 0.938,
+      "answer_relevancy": 0.781,
+      "faithfulness": 0.45,
+      "answer_correctness": 0.582
+    }
+  },
+  "GEN_LLAMA2_CHAT": {
+    "status": "ok",
+    "output_dir": "results/generation/Gen20251130_024328/GEN_LLAMA2_CHAT_20251130_024328",
+    "excel": "results/generation/Gen20251130_024328/GEN_LLAMA2_CHAT_20251130_024328/GEN_LLAMA2_CHAT_20251130_024328.xlsx",
+    "scores": {
+      "context_precision": 1.0,
+      "context_recall": 0.938,
+      "answer_relevancy": 0.628,
+      "faithfulness": 0.546,
+      "answer_correctness": 0.329
+    }
+  },
+  "GEN_PHI3_MEDIUM": {
+    "status": "ok",
+    "output_dir": "results/generation/Gen20251130_024328/GEN_PHI3_MEDIUM_20251130_024328",
+    "excel": "results/generation/Gen20251130_024328/GEN_PHI3_MEDIUM_20251130_024328/GEN_PHI3_MEDIUM_20251130_024328.xlsx",
+    "scores": {
+      "context_precision": 1.0,
+      "context_recall": 0.938,
+      "answer_relevancy": 0.717,
+      "faithfulness": 0.729,
+      "answer_correctness": 0.531
+    }
+  }
+}

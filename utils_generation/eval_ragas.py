@@ -1,6 +1,7 @@
 # utils/eval_ragas.py
 
 import numpy as np
+import time
 from datasets import Dataset
 from ragas import evaluate
 from ragas.metrics import (
@@ -9,7 +10,7 @@ from ragas.metrics import (
 )
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 import logging
-#logging.basicConfig(level=logging.INFO)
+
 logger = logging.getLogger(__name__)
 
 def fmt(v, d=3):
@@ -21,20 +22,12 @@ def fmt(v, d=3):
 
 def run_ragas_evaluation(questions, predictions, contexts_used, references, openai_key):
     """
-    Menjalankan evaluasi RAGAS:
-      - context precision
-      - context recall
-      - answer relevancy
-      - faithfulness
-      - answer correctness
-
-    Return:
-      ragas_item (list per item)
-      ragas_agg (aggregate)
+    Evaluasi RAGAS dengan retry otomatis jika ditemukan nilai NaN atau 0.
+    Maksimal retry = 3.
     """
 
     logger.info("\n==============================")
-    logger.info("📊  RAGAS Evaluation Started -v1")
+    logger.info("📊  RAGAS Evaluation Started - with retry mechanism")
     logger.info("==============================\n")
 
     # ---------------------------------
@@ -50,7 +43,6 @@ def run_ragas_evaluation(questions, predictions, contexts_used, references, open
         openai_api_key=openai_key
     )
     ragas_embed.client.batch_size = 128
-
 
     # ---------------------------------
     # DATASET RAGAS
@@ -69,30 +61,50 @@ def run_ragas_evaluation(questions, predictions, contexts_used, references, open
         Faithfulness(),
         AnswerCorrectness()
     ]
-    import logging
-    logging.getLogger("ragas").setLevel(logging.DEBUG)
-    logging.getLogger("ragas.metrics").setLevel(logging.DEBUG)
-    logging.getLogger("ragas.llms").setLevel(logging.DEBUG)
-    logging.getLogger("ragas.prompt").setLevel(logging.DEBUG)
 
+    # ==============================================================
+    # Retry RAGAS evaluation
+    # ==============================================================
 
+    def evaluate_once():
+        """1x evaluasi RAGAS"""
+        return evaluate(ds, metrics, ragas_llm, ragas_embed)
 
-    scores = evaluate(ds, metrics, ragas_llm, ragas_embed)
+    max_retry = 3
+    delay = 3
 
+    for attempt in range(1, max_retry + 1):
+        logger.info(f"\n🔄 RAGAS attempt {attempt}/{max_retry} ...")
+        scores = evaluate_once()
+
+        # cek apakah ada nilai error
+        failed = False
+        for key in ["context_precision", "context_recall",
+                    "answer_relevancy", "faithfulness", "answer_correctness"]:
+
+            arr = scores[key]
+            if any(v is None for v in arr):
+                failed = True
+            if any((v is not None and float(v) <= 0.3) for v in arr):
+                failed = True
+
+        if not failed:
+            logger.info("✔ RAGAS evaluation successful")
+            break
+
+        logger.warning(f"⚠ RAGAS result contains NaN/0 → retrying after {delay}s...")
+        time.sleep(delay)
+
+    else:
+        logger.error("❌ RAGAS failed after maximum retries. Using last computed scores.")
+
+    # ========== lanjut proses normal ============
     total = len(questions)
     ragas_item = []
 
-
-    logger.info("🔍 Detail skor per item:\n")
+    logger.info("\n🔍 Detail skor per item:")
 
     for i in range(total):
-
-        q = ds[i]["question"]
-        a = ds[i]["answer"]
-        ctx = ds[i]["contexts"]
-        gt = ds[i]["ground_truth"]
-
-
 
         item_scores = {
             "context_precision": fmt(scores["context_precision"][i]),
@@ -103,24 +115,18 @@ def run_ragas_evaluation(questions, predictions, contexts_used, references, open
         }
         ragas_item.append(item_scores)
 
-        logger.info(f"\n==============================")
+        logger.info("\n==============================")
         logger.info(f"Item {i+1}/{total}")
         logger.info("==============================")
-        logger.info(f"Question       : {q}")
-        logger.info(f"Answer         : {a}")
-        logger.info(f"Ground Truth   : {gt}")
-        logger.info(f"Contexts       : {ctx}")
+        logger.info(f"Question       : {questions[i]}")
+        logger.info(f"Answer         : {predictions[i]}")
+        logger.info(f"Ground Truth   : {references[i]}")
+        logger.info(f"Contexts       : {contexts_used[i]}")
         logger.info("--- Skor ---")
-        logger.info(f"  context_precision : {item_scores['context_precision']}")
-        logger.info(f"  context_recall    : {item_scores['context_recall']}")
-        logger.info(f"  answer_relevancy  : {item_scores['answer_relevancy']}")
-        logger.info(f"  faithfulness      : {item_scores['faithfulness']}")
-        logger.info(f"  answer_correctness: {item_scores['answer_correctness']}")
-        logger.info("")
+        for k, v in item_scores.items():
+            logger.info(f"  {k:20s}: {v}")
 
-    # ---------------------------------
-    # AGGREGATE
-    # ---------------------------------
+    # Aggregate
     ragas_agg = {
         "context_precision": fmt(np.mean(scores["context_precision"])),
         "context_recall": fmt(np.mean(scores["context_recall"])),
@@ -134,7 +140,7 @@ def run_ragas_evaluation(questions, predictions, contexts_used, references, open
     logger.info("==============================\n")
 
     for k, v in ragas_agg.items():
-        print(f"  {k:20s}: {v}")
+        logger.info(f"  {k:20s}: {v}")
 
     logger.info("\n✔ Evaluasi RAGAS selesai.\n")
 
