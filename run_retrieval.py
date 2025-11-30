@@ -21,7 +21,15 @@ stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 from dotenv import load_dotenv
 load_dotenv()
 import os
+import sys
 
+# memastikan folder project menjadi root import
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(BASE_DIR)
+from utils_common.utils import *
+import logging
+logger = logging.getLogger(__name__)
+OUTPUT_DIR=f"results/retrieval/ret_{stamp}"
 
 # ================================================
 # BLOOM LEVEL CLASSIFIER  (GPT 4o mini)
@@ -68,7 +76,7 @@ def bloom_aware_chunk(text, min_tokens=40, max_tokens=280):
     paragraphs = [p.strip() for p in text.split("\n") if len(p.strip()) > 0]
     total = len(paragraphs)
 
-    print(f"[BloomChunk] Total paragraf: {total}")
+    logger.info(f"[BloomChunk] Total paragraf: {total}")
 
     bloom_buckets = {
         "Remember": [], "Understand": [], "Apply": [],
@@ -76,7 +84,7 @@ def bloom_aware_chunk(text, min_tokens=40, max_tokens=280):
     }
 
     for i, p in enumerate(paragraphs, start=1):
-        print(f"[BloomChunk] {i}/{total} → klasifikasi...", end="\r")
+        logger.info(f"[BloomChunk] {i}/{total} → klasifikasi...", end="\r")
 
         try:
             label = classify_bloom_gpt(p)
@@ -92,7 +100,7 @@ def bloom_aware_chunk(text, min_tokens=40, max_tokens=280):
         else:
             bloom_buckets[label].append(p)
 
-    print("\n[BloomChunk] Klasifikasi selesai. Menyusun chunk Bloom...")
+    logger.info("\n[BloomChunk] Klasifikasi selesai. Menyusun chunk Bloom...")
 
     # gabungkan chunk berdasarkan level bloom
     final_chunks = []
@@ -408,8 +416,11 @@ def text_hit_match(gt_text, retrieved_chunks, chunk_embs, gt_emb,
 # ======================================================
 
 def run_retrieval(exp, master, df, out_dir):
-    print(f"\n=== Running experiment {exp['id']} ===")
-
+    logger.info(f"\n=== Running experiment {exp['id']} ===")
+    import torch
+    torch.cuda.empty_cache()
+    torch.cuda.ipc_collect()
+    logger.info("[GPU] Cache cleared")
     embedder = SentenceTransformer(
         exp["embedding"]["model"],
         device="cuda",
@@ -427,12 +438,12 @@ def run_retrieval(exp, master, df, out_dir):
             for m in bloom_metadata:
                 f.write(json.dumps(m, ensure_ascii=False) + "\n")
 
-    print("Chunks:", len(chunks))
+    logger.info("Chunks:", len(chunks))
 
-    chunk_embs = embedder.encode(chunks, normalize_embeddings=True, batch_size=4)
+    chunk_embs = embedder.encode(chunks, normalize_embeddings=True, batch_size=1)
 
-    q_embs = embedder.encode(df["question"].tolist(), normalize_embeddings=True, batch_size=4)
-    gt_embs = embedder.encode(df["context"].tolist(), normalize_embeddings=True, batch_size=4)
+    q_embs = embedder.encode(df["question"].tolist(), normalize_embeddings=True, batch_size=1)
+    gt_embs = embedder.encode(df["context"].tolist(), normalize_embeddings=True, batch_size=1)
 
     dim = chunk_embs.shape[1]
     index = faiss.IndexFlatL2(dim)
@@ -674,7 +685,7 @@ def save_excel(exp_id, out_dir, df_res, chunks, summary, bloom_summary, heatmap_
         img_s.anchor = "A1"
         ws_s.add_image(img_s)
 
-    print("✔ Excel saved:", excel_path)
+    logger.info("✔ Excel saved:", excel_path)
 
 # ======================================================
 # SAVE FAISS + EMBEDDINGS + CHUNKS
@@ -699,9 +710,9 @@ def save_faiss_and_metadata(out_dir, exp_id, index, chunk_embs, chunks):
             rec = {"chunk_id": i, "text": ch}
             f.write(json.dumps(rec, ensure_ascii=False) + "\n")
 
-    print("✔ FAISS index saved:", faiss_path)
-    print("✔ Embeddings saved:", emb_path)
-    print("✔ Chunks saved:", chunks_path)
+    logger.info("✔ FAISS index saved:", faiss_path)
+    logger.info("✔ Embeddings saved:", emb_path)
+    logger.info("✔ Chunks saved:", chunks_path)
 
 import ast
 
@@ -737,10 +748,11 @@ def main():
     all_bloom = []
 
     df = pd.read_excel(master["dataset"])
+    df= df.head(10)  # for testing only, remove this line for full dataset
     df["context"] = df["context"].astype(str).apply(flatten_context)
 
 
-    ensure_dir("outputsRetrieval")
+    ensure_dir(OUTPUT_DIR)
 
     global_summary = {}
 
@@ -768,7 +780,7 @@ def main():
 
 
         # SAVE GLOBAL COMPARISON
-    summary_dir = f"outputsRetrieval/{stamp}"
+    summary_dir = OUTPUT_DIR
     ensure_dir(summary_dir)
     df_bloom_global = pd.concat(all_bloom, ignore_index=True)
 
@@ -790,9 +802,9 @@ def main():
 
 
 
-    print("\n=== GLOBAL SUMMARY SAVED ===")
+    logger.info("\n=== GLOBAL SUMMARY SAVED ===")
 
-    print("\n=== ALL DONE ===")
+    logger.info("\n=== ALL DONE ===")
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 master:
-  dataset: "dataset_evaluation/validation_20251124_101649.xlsx"
+  dataset: "datasets/validated.xlsx"
   mode: "retrieval"
-  top_k: 5
+  top_k: 10
   device: "gpu"
   pdf_dir: "docs/"
 
@@ -12,7 +12,7 @@ experiments:
   # =====================================================
 
   - id: FIX400_BGE_M3
-    active: false
+    active: true
     chunking:
       type: fixed
       size: 400
@@ -21,7 +21,7 @@ experiments:
       model: "models/embedding/bge-m3"
 
   - id: FIX400_SNOWFLAKE
-    active: false
+    active: true
     chunking:
       type: fixed
       size: 400
@@ -30,7 +30,7 @@ experiments:
       model: "models/embedding/snowflake-arctic-embed-l-v2.0"
 
   - id: FIX400_GEMMA300M
-    active: false
+    active: true
     chunking:
       type: fixed
       size: 400
@@ -39,7 +39,7 @@ experiments:
       model: "models/embedding/embeddinggemma-300m"
 
   - id: FIX400_GTE
-    active: false
+    active: true
     chunking:
       type: fixed
       size: 400
@@ -62,7 +62,7 @@ experiments:
   # =====================================================
 
   - id: SENT_BGE_M3
-    active: false
+    active: true
     chunking:
       type: sentence
       window: 400
@@ -71,7 +71,7 @@ experiments:
       model: "models/embedding/bge-m3"
 
   - id: SENT_SNOWFLAKE
-    active: false
+    active: true
     chunking:
       type: sentence
       window: 400
@@ -80,7 +80,7 @@ experiments:
       model: "models/embedding/snowflake-arctic-embed-l-v2.0"
 
   - id: SENT_GEMMA300M
-    active: false
+    active: true
     chunking:
       type: sentence
       window: 400
@@ -89,7 +89,7 @@ experiments:
       model: "models/embedding/embeddinggemma-300m"
 
   - id: SENT_GTE
-    active: false
+    active: true
     chunking:
       type: sentence
       window: 400
@@ -98,7 +98,7 @@ experiments:
       model: "models/embedding/gte-multilingual-base"
 
   - id: SENT_E5
-    active: false
+    active: true
     chunking:
       type: sentence
       window: 400
@@ -112,7 +112,7 @@ experiments:
   # =====================================================
 
   - id: SEM_BGE_M3
-    active: false
+    active: true
     chunking:
       type: semantic
       threshold: 0.75
@@ -122,7 +122,7 @@ experiments:
       model: "models/embedding/bge-m3"
 
   - id: SEM_SNOWFLAKE
-    active: false
+    active: true
     chunking:
       type: semantic
       threshold: 0.75
@@ -132,7 +132,7 @@ experiments:
       model: "models/embedding/snowflake-arctic-embed-l-v2.0"
 
   - id: SEM_GEMMA300M
-    active: false
+    active: true
     chunking:
       type: semantic
       threshold: 0.75
@@ -142,7 +142,7 @@ experiments:
       model: "models/embedding/embeddinggemma-300m"
 
   - id: SEM_GTE
-    active: false
+    active: true
     chunking:
       type: semantic
       threshold: 0.75
