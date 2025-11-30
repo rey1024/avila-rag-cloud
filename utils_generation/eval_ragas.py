@@ -41,7 +41,7 @@ def run_ragas_evaluation(questions, predictions, contexts_used, references, open
     # SETUP LLM DAN EMBEDDER
     # ---------------------------------
     ragas_llm = ChatOpenAI(
-        model="gpt-4o-mini",
+        model="gpt-4.1-mini",
         temperature=0,
         openai_api_key=openai_key
     )

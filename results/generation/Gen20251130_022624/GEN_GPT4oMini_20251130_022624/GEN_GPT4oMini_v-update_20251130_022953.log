@@ -1,0 +1,41 @@
+2025-11-30 02:29:53,464 - INFO - ======================================================
+2025-11-30 02:29:53,464 - INFO - 📄 Menyimpan regenerate Excel → results/generation/Gen20251130_022624/GEN_GPT4oMini_20251130_022624/GEN_GPT4oMini_v-update_20251130_022953.xlsx
+2025-11-30 02:29:53,464 - INFO - 📝 Log → results/generation/Gen20251130_022624/GEN_GPT4oMini_20251130_022624/GEN_GPT4oMini_v-update_20251130_022953.log
+2025-11-30 02:29:53,464 - INFO - ======================================================
+2025-11-30 02:29:54,671 - INFO - ✔ update_ragas_missing_v2 selesai.
+2025-11-30 02:31:57,561 - INFO - ======================================================
+2025-11-30 02:31:57,561 - INFO - 🔄 Memulai update_ragas_missing_v2()
+2025-11-30 02:31:57,561 - INFO - 📘 File original: results/generation/Gen20251130_022624/GEN_GEMMA_7B_20251130_022624/GEN_GEMMA_7B_20251130_022624.xlsx
+2025-11-30 02:31:57,561 - INFO - ======================================================
+2025-11-30 02:31:57,566 - INFO - 🔍 Total rows perlu re-evaluasi: 1
+2025-11-30 02:31:57,566 - INFO - ✔ Menjalankan ulang RAGAS untuk row kosong / bernilai 0...
+2025-11-30 02:31:57,566 - INFO - • Row 1 → RE-EVAL (alasan: zero)
+2025-11-30 02:31:57,566 - INFO -   Question: Siapa yang disebut sebagai desainer pengalaman pengguna?...
+2025-11-30 02:32:55,569 - INFO - ✔ Row updated 1: CP=0.363, CR=1.0, AR=0.821, F=0.0, AC=0.994
+2025-11-30 02:32:55,570 - INFO - 📊 Aggregate baru:
+2025-11-30 02:32:55,570 - INFO -   context_precision   : 0.84075
+2025-11-30 02:32:55,570 - INFO -   context_recall      : 1.0
+2025-11-30 02:32:55,570 - INFO -   answer_relevancy    : 0.7115
+2025-11-30 02:32:55,570 - INFO -   faithfulness        : 0.37324999999999997
+2025-11-30 02:32:55,570 - INFO -   answer_correctness  : 0.5599999999999999
+2025-11-30 02:32:55,570 - INFO - ======================================================
+2025-11-30 02:32:55,570 - INFO - 📄 Menyimpan regenerate Excel → results/generation/Gen20251130_022624/GEN_GEMMA_7B_20251130_022624/GEN_GEMMA_7B_v-update_20251130_023255.xlsx
+2025-11-30 02:32:55,570 - INFO - 📝 Log → results/generation/Gen20251130_022624/GEN_GEMMA_7B_20251130_022624/GEN_GEMMA_7B_v-update_20251130_023255.log
+2025-11-30 02:32:55,570 - INFO - ======================================================
+2025-11-30 02:32:56,759 - INFO - ✔ update_ragas_missing_v2 selesai.
+2025-11-30 02:34:59,555 - INFO - ======================================================
+2025-11-30 02:34:59,555 - INFO - 🔄 Memulai update_ragas_missing_v2()
+2025-11-30 02:34:59,555 - INFO - 📘 File original: results/generation/Gen20251130_022624/GEN_LLAMA2_CHAT_20251130_022624/GEN_LLAMA2_CHAT_20251130_022624.xlsx
+2025-11-30 02:34:59,555 - INFO - ======================================================
+2025-11-30 02:34:59,559 - INFO - 🔍 Total rows perlu re-evaluasi: 0
+2025-11-30 02:34:59,559 - INFO - ✔ Tidak ada row perlu evaluasi ulang. Hanya regenerate excel baru.
+2025-11-30 02:34:59,560 - INFO - 📊 Aggregate baru:
+2025-11-30 02:34:59,560 - INFO -   context_precision   : 1.0
+2025-11-30 02:34:59,560 - INFO -   context_recall      : 1.0
+2025-11-30 02:34:59,560 - INFO -   answer_relevancy    : 0.6065
+2025-11-30 02:34:59,560 - INFO -   faithfulness        : 0.46025
+2025-11-30 02:34:59,560 - INFO -   answer_correctness  : 0.16575
+2025-11-30 02:34:59,560 - INFO - ======================================================
+2025-11-30 02:34:59,560 - INFO - 📄 Menyimpan regenerate Excel → results/generation/Gen20251130_022624/GEN_LLAMA2_CHAT_20251130_022624/GEN_LLAMA2_CHAT_v-update_20251130_023459.xlsx
+2025-11-30 02:34:59,560 - INFO - 📝 Log → results/generation/Gen20251130_022624/GEN_LLAMA2_CHAT_20251130_022624/GEN_LLAMA2_CHAT_v-update_20251130_023459.log
+2025-11-30 02:34:59,560 - INFO - ======================================================

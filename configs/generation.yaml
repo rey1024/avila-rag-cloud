@@ -18,7 +18,7 @@ experiments:
   # GPT 
   # =====================================================
   - id: GEN_GPT4oMini
-    active: false
+    active: true
     llm:
       provider: "openai"
       model: "gpt-4o-mini"
@@ -41,7 +41,7 @@ experiments:
   # LLAMA 2 CHAT (sementara, karena LLaMA-3 belum ada)
   # =====================================================
   - id: GEN_LLAMA2_CHAT
-    active: false
+    active: true
     llm:
       provider: "ollama"
       model: "llama2:chat"
@@ -53,7 +53,7 @@ experiments:
   # PHI 3 MEDIUM
   # =====================================================
   - id: GEN_PHI3_MEDIUM
-    active: false
+    active: true
     llm:
       provider: "ollama"
       model: "phi3:medium"

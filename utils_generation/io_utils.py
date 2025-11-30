@@ -138,10 +138,10 @@ def get_timestamp():
 def load_eval_dataset(path):
     df = pd.read_excel(path)
     
-    # Ambil 5 teratas dan 5 terbawah
-    # df_top = df.head(50)
-    # df_bottom = df.tail(50)
-    # df = pd.concat([df_top, df_bottom], ignore_index=True)
+   # Ambil 5 teratas dan 5 terbawah
+    df_top = df.head(2)
+    df_bottom = df.tail(2)
+    df = pd.concat([df_top, df_bottom], ignore_index=True)
 
     #df = df[df["id"] == 2].copy()
 
@@ -156,11 +156,11 @@ def load_eval_dataset(path):
             raise ValueError(f"Kolom {c} tidak ada di dataset evaluasi")
 
     #Ambil 5 item per bloomlevel
-    df = (
-        df.groupby("bloomlevel")
-        .head(2)
-        .reset_index(drop=True)
-    )
+    # df = (
+    #     df.groupby("bloomlevel")
+    #     .head(2)
+    #     .reset_index(drop=True)
+    # )
 
 
 
