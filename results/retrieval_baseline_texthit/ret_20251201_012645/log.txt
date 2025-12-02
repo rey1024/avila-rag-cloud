@@ -1,0 +1,15 @@
+2025-12-01 01:26:45,073 [INFO] === Baseline Retrieval + Simple TextHit Started ===
+2025-12-01 01:26:45,141 [INFO] Dataset loaded: (1819, 9)
+2025-12-01 01:26:45,141 [INFO] === Running baseline exp: FIX400_BGE_M3 ===
+2025-12-01 01:26:45,142 [INFO] Load pretrained SentenceTransformer: models/embedding/bge-m3
+2025-12-01 01:26:47,970 [INFO] Loaded embedder: models/embedding/bge-m3
+2025-12-01 01:26:47,970 [INFO] Loading PDF/DOCX from folder: docs/
+2025-12-01 01:26:48,027 [INFO] Reading DOCX: UX Interaction Testing.docx
+2025-12-01 01:26:48,061 [INFO] Reading DOCX: The Guide To Usability Testing -id v3.docx
+2025-12-01 01:26:48,121 [INFO] Reading DOCX: The Basics of User Experience Design -id.docx
+2025-12-01 01:26:48,140 [INFO] Total corpus length: 309307 chars
+2025-12-01 01:26:48,140 [INFO] Chunking: size=400, overlap=80
+2025-12-01 01:26:48,142 [INFO] Total chunks: 130
+2025-12-01 01:26:48,142 [INFO] Embedding chunks...
+2025-12-01 01:26:52,152 [INFO] Embedding questions...
+2025-12-01 01:26:56,279 [INFO] Embedding ground truth contexts...

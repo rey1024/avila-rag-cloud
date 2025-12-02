@@ -2,7 +2,7 @@ master:
   dataset: "datasets/validated.xlsx"
   mode: "retrieval"
   top_k: 10
-  device: "gpu"
+  device: "cuda"
   pdf_dir: "docs/"
 
 experiments:
@@ -162,7 +162,7 @@ experiments:
       model: "models/embedding/multilingual-e5-base"
 
   - id: Bloom_E5
-    active: true
+    active: false
     chunking:
       type: bloom_llm
       min_chunk_size: 40

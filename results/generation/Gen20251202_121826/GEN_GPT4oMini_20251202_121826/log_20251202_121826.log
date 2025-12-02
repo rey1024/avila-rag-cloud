@@ -1,0 +1,84 @@
+2025-12-02 12:18:26 [INFO] ================= Menjalankan GEN_GPT4oMini ============================
+2025-12-02 12:18:26 [INFO]     - experiment_config: type=dict, size=3, preview={'id': 'GEN_GPT4oMini', 'active': 'True', 'llm': "{'provider': 'openai', 'model': 'gpt-4o-mini', 'max_tokens':..."}
+2025-12-02 12:18:26 [INFO] ✔ FAISS index loaded: outputsRetrieval/20251125_083908/SEM_E5_20251125_083908/faiss/index.faiss
+2025-12-02 12:18:26 [INFO] ✔ Chunks from FAISS loaded: 97 chunks available
+2025-12-02 12:18:26 [INFO] ✔ Dataset loaded from: dataset_evaluation/validation_20251124_101649.xlsx (items=4)
+2025-12-02 12:18:26 [INFO] ✔ LLM setup -> provider: openai, model: gpt-4o-mini, endpoint: http://localhost:11434, mode: OpenAI/ChatOpenAI
+2025-12-02 12:18:26 [INFO] • Pre-encoding all chunks for diagnostics...
+2025-12-02 12:18:27 [INFO] ✔ Pre-encoding done
+2025-12-02 12:18:27 [INFO]     - chunk_embs_shape: type=tuple, size=2, preview=[97, 768]
+2025-12-02 12:18:27 [INFO] Mulai proses 4 item...
+2025-12-02 12:18:27 [INFO] Penjelasan: LOOP 1 = retrieval + diagnostics (tidak ada pemanggilan LLM).
+2025-12-02 12:18:27 [INFO] 
+############## Memproses item 0/4
+2025-12-02 12:18:27 [INFO]   → Retrieval detail:
+2025-12-02 12:18:27 [INFO]     - ###question: type=str, size=57, preview=Apa yang dimaksud dengan desain...
+2025-12-02 12:18:27 [INFO]     - ###groundtruth_answer: type=str, size=136, preview=Desain pengalaman pengguna berfokus pada...
+2025-12-02 12:18:27 [INFO]     - ###groundtruth_context: type=str, size=3365, preview={'1': 'The Basics of User...
+2025-12-02 12:18:27 [INFO]     - faiss_top10: type=list, size=10, preview=['Kompleksitas dan Persepsi Desain pengalaman...', 'Pendekatan ini meningkatkan peluang keberhasilan...', 'UI design umumnya mengacu pada...']
+2025-12-02 12:18:27 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Kompleksitas dan Persepsi Desain pengalaman...', 'Pendekatan ini meningkatkan peluang keberhasilan...']
+2025-12-02 12:18:27 [INFO]     - retrieved_ids: type=list, size=2, preview=[71, 72]
+2025-12-02 12:18:27 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[0.006878828164190054, 0.05218103155493736, -0.010217214934527874]
+2025-12-02 12:18:27 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.011678086593747139, 0.04386964812874794, -0.011315690353512764]
+2025-12-02 12:18:27 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[0.960654079914093, 0.9275745749473572]
+2025-12-02 12:18:27 [INFO]     - semantic_scores_current: type=list, size=2, preview=[0.960654079914093, 0.9275745749473572]
+2025-12-02 12:18:27 [INFO] 
+############## Memproses item 1/4
+2025-12-02 12:18:27 [INFO]   → Retrieval detail:
+2025-12-02 12:18:27 [INFO]     - ###question: type=str, size=56, preview=Siapa yang disebut sebagai desainer...
+2025-12-02 12:18:27 [INFO]     - ###groundtruth_answer: type=str, size=149, preview=Seorang desainer pengalaman pengguna adalah...
+2025-12-02 12:18:27 [INFO]     - ###groundtruth_context: type=str, size=3365, preview={'1': 'The Basics of User...
+2025-12-02 12:18:27 [INFO]     - faiss_top10: type=list, size=10, preview=['Kompleksitas dan Persepsi Desain pengalaman...', 'Prototipe Wizard of Oz bermanfaat...', 'Pendekatan ini meningkatkan peluang keberhasilan...']
+2025-12-02 12:18:27 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Kompleksitas dan Persepsi Desain pengalaman...', 'Tokoh besar dalam bidang pengalaman...']
+2025-12-02 12:18:27 [INFO]     - retrieved_ids: type=list, size=2, preview=[71, 76]
+2025-12-02 12:18:27 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[0.006878828164190054, 0.05218103155493736, -0.010217214934527874]
+2025-12-02 12:18:27 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.011678086593747139, 0.04386964812874794, -0.011315690353512764]
+2025-12-02 12:18:27 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[0.960654079914093, 0.872351884841919]
+2025-12-02 12:18:27 [INFO]     - semantic_scores_current: type=list, size=2, preview=[0.960654079914093, 0.872351884841919]
+2025-12-02 12:18:27 [INFO] 
+############## Memproses item 2/4
+2025-12-02 12:18:27 [INFO]   → Retrieval detail:
+2025-12-02 12:18:27 [INFO]     - ###question: type=str, size=158, preview=Rancang sebuah pendekatan yang menggabungkan...
+2025-12-02 12:18:27 [INFO]     - ###groundtruth_answer: type=str, size=775, preview=Pendekatan yang menggabungkan prinsip UI...
+2025-12-02 12:18:27 [INFO]     - ###groundtruth_context: type=str, size=6614, preview={'110': 'Pengguna tidak peduli pada...
+2025-12-02 12:18:27 [INFO]     - faiss_top10: type=list, size=10, preview=['UI design umumnya mengacu pada...', 'Menghasilkan Ide dan Solusi Kreatif...', 'Pendekatan ini meningkatkan peluang keberhasilan...']
+2025-12-02 12:18:27 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['UI design umumnya mengacu pada...', 'Pendekatan ini meningkatkan peluang keberhasilan...']
+2025-12-02 12:18:27 [INFO]     - retrieved_ids: type=list, size=2, preview=[31, 72]
+2025-12-02 12:18:27 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[-0.002164208795875311, 0.06586157530546188, -0.015566523186862469]
+2025-12-02 12:18:28 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.002863052999600768, 0.059764038771390915, -0.010987209156155586]
+2025-12-02 12:18:28 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[0.9538244009017944, 0.9093748331069946]
+2025-12-02 12:18:28 [INFO]     - semantic_scores_current: type=list, size=2, preview=[0.9538244009017944, 0.9093748331069946]
+2025-12-02 12:18:28 [INFO] 
+############## Memproses item 3/4
+2025-12-02 12:18:28 [INFO]   → Retrieval detail:
+2025-12-02 12:18:28 [INFO]     - ###question: type=str, size=156, preview=Rancang sebuah antarmuka yang menggabungkan...
+2025-12-02 12:18:28 [INFO]     - ###groundtruth_answer: type=str, size=517, preview=Untuk merancang antarmuka yang menggabungkan...
+2025-12-02 12:18:28 [INFO]     - ###groundtruth_context: type=str, size=3134, preview={'79': 'Tips: • Sediakan akselerator...
+2025-12-02 12:18:28 [INFO]     - faiss_top10: type=list, size=10, preview=['UI design umumnya mengacu pada...', '8 Golden Rules of Interface...', 'Selama desain Anda melibatkan interaksi...']
+2025-12-02 12:18:28 [INFO]     - retrieved_after_rerank: type=list, size=2, preview=['Hukum Jakob menyatakan bahwa pengguna...', 'UI design umumnya mengacu pada...']
+2025-12-02 12:18:28 [INFO]     - retrieved_ids: type=list, size=2, preview=[4, 31]
+2025-12-02 12:18:28 [INFO]     - retrieved_embs: type=ndarray, size=(2, 768), preview=[0.01166477706283331, 0.038935888558626175, -0.014598394744098186]
+2025-12-02 12:18:28 [INFO]     - gt_emb: type=ndarray, size=(768,), preview=[0.012213192880153656, 0.038081686943769455, -0.02573658898472786]
+2025-12-02 12:18:28 [INFO]     - sims chunk grountruth vs chunk retrieved: type=list, size=2, preview=[0.9184547066688538, 0.904532790184021]
+2025-12-02 12:18:28 [INFO]     - semantic_scores_current: type=list, size=2, preview=[0.9184547066688538, 0.904532790184021]
+2025-12-02 12:18:28 [INFO] 
+Mulai tahap LLM generation...
+2025-12-02 12:18:28 [INFO] Penjelasan: LOOP 2 = Menciptakan jawaban berdasarkan pertanyaan dari konteks yang sudah dikumpulkan dan memanggil LLM untuk tiap item.
+2025-12-02 12:18:29 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-02 12:18:29 [INFO]     - prediction_preview: type=str, size=136, preview=Desain pengalaman pengguna berfokus pada...
+2025-12-02 12:18:31 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-02 12:18:31 [INFO]     - prediction_preview: type=str, size=149, preview=Seorang desainer pengalaman pengguna adalah...
+2025-12-02 12:18:32 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-02 12:18:32 [INFO]     - prediction_preview: type=str, size=30, preview=Tidak ditemukan dalam konteks.
+2025-12-02 12:18:33 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-02 12:18:33 [INFO]     - prediction_preview: type=str, size=30, preview=Tidak ditemukan dalam konteks.
+2025-12-02 12:18:33 [INFO] Menjalankan RAGAS evaluation...
+2025-12-02 12:18:33 [INFO] 
+==============================
+2025-12-02 12:18:33 [INFO] 📊  RAGAS Evaluation Started - with retry mechanism
+2025-12-02 12:18:33 [INFO] ==============================
+
+2025-12-02 12:18:33 [INFO] 
+🔄 RAGAS attempt 1/3 ...
+2025-12-02 12:18:36 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-02 12:18:37 [WARNING] LLM returned 1 generations instead of requested 3. Proceeding with 1 generations.
