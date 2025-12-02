@@ -40,6 +40,9 @@ logger = logging.getLogger(__name__)
 # ================================================
 from openai import OpenAI
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+def short_text(t, max_len=200):
+    t = str(t)
+    return t if len(t) <= max_len else t[:max_len] + " ... [truncated]"
 
 def classify_bloom_gpt(paragraph):
     logger.info(f"Classifying paragraph with GPT (length: {len(paragraph)} chars)")
@@ -233,8 +236,8 @@ def semantic_chunk_langchain(text, embedder,
         return []
 
     # 2. Embedding semua kalimat
-    sent_embs = embedder.encode(sents, normalize_embeddings=True, batch_size=2)
-    # Hitung similarity antar kalimat berdekatan
+    sent_embs = embedder.encode(sents, normalize_embeddings=True, batch_size=64)
+    # Hitung similarity antar kalimat berdekata
     pair_sims = []
     for i in range(1, len(sent_embs)):
         pair_sims.append(np.dot(sent_embs[i], sent_embs[i - 1]))
@@ -430,52 +433,55 @@ def ndcg_at_k(retrieved_ids, gt_id, k):
 # ======================================================
 # TEXT-BASED HIT MATCHING (exact, overlap, semantic)
 # ======================================================
-def text_hit_match(gt_text, retrieved_chunks, chunk_embs, gt_emb,
-                   overlap_threshold=0.25,
-                   semantic_threshold=0.86):
-    logger.info(f"Text hit match with {len(retrieved_chunks)} chunks, thresholds: overlap={overlap_threshold}, semantic={semantic_threshold}")
+def text_hit_match(
+    gt_text, 
+    retrieved_chunks, 
+    chunk_embs, 
+    gt_emb,
+    overlap_threshold=0.35,      # lebih ketat sedikit
+    semantic_threshold=0.90,     # balanced precision
+    exact_window=200             # batasi exact match
+):
+    """
+    Versi balanced:
+    - Tidak boleh semantic-only hit
+    - Harus ada exact match kecil ATAU overlap tinggi
+    - Ditambah semantic similarity yang kuat
+    """
 
     best_exact = 0
     best_overlap = 0
     best_sim = 0
 
     for rid, chunk_text in retrieved_chunks:
-        logger.info(f"Evaluating chunk ID {rid}")
-        logger.info(f"CHUNK TEXT:\n{chunk_text}")
 
-        # Exact
-        # exact or soft substring match
+        # EXACT match ketat (hanya 200 karakter pertama)
         if (
-            gt_text.strip() in chunk_text 
-            or chunk_text in gt_text.strip()
-            or gt_text[:150] in chunk_text 
-            or chunk_text[:150] in gt_text
+            gt_text[:exact_window].strip() in chunk_text
+            or chunk_text[:exact_window].strip() in gt_text
         ):
             best_exact = 1
 
-        # Overlap
+        # OVERLAP
         ov = token_overlap(gt_text, chunk_text)
         best_overlap = max(best_overlap, ov)
 
-        # Semantic sim
+        # SEMANTIC
         sim = float(np.dot(chunk_embs[rid], gt_emb))
         best_sim = max(best_sim, sim)
-        logger.info(f"SCORES → exact={int(gt_text.strip() in chunk_text)}, overlap={ov}, semantic={sim}")
 
-    logger.info(f"Best scores: exact={best_exact}, overlap={best_overlap}, semantic={best_sim}")
+    # 1) Semantic harus kuat
+    semantic_ok = best_sim >= semantic_threshold
 
-    # Majority vote
-    votes = int(best_exact == 1) + \
-            int(best_overlap >= overlap_threshold) + \
-            int(best_sim >= semantic_threshold)
+    # 2) Exact match kecil atau overlap lumayan
+    text_match_ok = (best_exact == 1) or (best_overlap >= overlap_threshold)
 
-    hit = 1 if votes >= 2 else 0
-    logger.info(f"Votes: {votes}, hit: {hit}")
-        # fallback for semantic-only match
-    if best_sim >= 0.82:
-        hit = 1
+    # FINAL HIT rule (balanced):
+    # - semantic kuat
+    # - ditambah exact OR overlap yang cukup
+    hit = 1 if (semantic_ok and text_match_ok) else 0
+
     return hit, best_exact, best_overlap, best_sim
-
 
 
 # ================================================
@@ -492,7 +498,7 @@ def run_retrieval(exp, master, df, out_dir):
     logger.info(f"Dataset shape: {df.shape}")
     logger.info(f"Output dir: {out_dir}")
 
-    reranker = CrossEncoder("BAAI/bge-reranker-large", device="cuda")
+    reranker = CrossEncoder("BAAI/bge-reranker-v2-m3", device="cuda")
     logger.info("Loaded CrossEncoder reranker")
 
     import torch
@@ -522,20 +528,25 @@ def run_retrieval(exp, master, df, out_dir):
         logger.info(f"Saved bloom metadata to {bloom_meta_path}")
 
     logger.info("Starting chunk embedding...")
-    chunk_embs = embedder.encode(chunks, normalize_embeddings=True, batch_size=2)
+    chunk_embs = embedder.encode(chunks, normalize_embeddings=True, batch_size=64)
     logger.info(f"Chunk embeddings shape: {chunk_embs.shape}")
 
     logger.info("Starting question embedding...")
-    q_embs = embedder.encode(df["question"].tolist(), normalize_embeddings=True, batch_size=2)
+    q_embs = embedder.encode(df["question"].tolist(), normalize_embeddings=True, batch_size=64)
     logger.info(f"Question embeddings shape: {q_embs.shape}")
 
     logger.info("Starting ground truth embedding...")
-    gt_embs = embedder.encode(df["context"].tolist(), normalize_embeddings=True, batch_size=2)
+    gt_embs = embedder.encode(df["context"].tolist(), normalize_embeddings=True, batch_size=64)
     logger.info(f"Ground truth embeddings shape: {gt_embs.shape}")
 
     dim = chunk_embs.shape[1]
-    index = faiss.IndexFlatL2(dim)
+    index = faiss.IndexFlatIP(dim)
     index.add(chunk_embs)
+
+    # res = faiss.StandardGpuResources()
+    # index = faiss.index_cpu_to_gpu(res, 0, faiss.IndexFlatL2(dim))
+    # index.add(chunk_embs)
+    logger.info(f"Built FAISS index with {index.ntotal} vectors, dim: {dim}")
     logger.info(f"Built FAISS index with {index.ntotal} vectors, dim: {dim}")
 
     top_k = master.get("top_k",10)
@@ -543,10 +554,19 @@ def run_retrieval(exp, master, df, out_dir):
     rows = []
 
     logger.info("Computing full similarity matrix...")
-    full_sim_matrix = np.dot(chunk_embs, q_embs.T)
+    #full_sim_matrix = np.dot(chunk_embs, q_embs.T)
+    
+    chunk_t = torch.tensor(chunk_embs, device="cuda")
+    q_t = torch.tensor(q_embs, device="cuda")
+    full_sim_matrix = torch.matmul(chunk_t, q_t.T).cpu().numpy()
     logger.info(f"Similarity matrix shape: {full_sim_matrix.shape}")
 
     logger.info("Starting retrieval loop...")
+    
+    
+    #res = faiss.StandardGpuResources()
+    #gpu_index = faiss.index_cpu_to_gpu(res, 0, faiss.IndexFlatL2(dim))
+    #gpu_index.add(chunk_embs)    
     for i, row in df.iterrows():
         logger.info(f"Processing row {i+1}/{len(df)}: {row['id']}")
         q_emb = q_embs[i]
@@ -566,110 +586,121 @@ def run_retrieval(exp, master, df, out_dir):
         gt_chunk = map_groundtruth_chunk(gt_text, chunks, chunk_embs, gt_emb)
         logger.info(f"Row {i}: GT chunk: {gt_chunk}")
         logger.info(f"[Row {i}] GT CHUNK ID: {gt_chunk}")
-        logger.info(f"[Row {i}] GT CHUNK TEXT:\n{chunks[gt_chunk]}")
+        logger.info(f"[Row {i}] GT CHUNK TEXT:\n{short_text(chunks[gt_chunk])}")
+        logger.info(f"GT_TEXT: {short_text(gt_text)}")
 
 
         # ------------------------------------------------
         # RETRIEVAL
         # ------------------------------------------------
         logger.info(f"Row {i}: Performing FAISS search...")
+    
+
+
+        #scores, idx = gpu_index.search(q_emb.reshape(1, -1), top_k)
         scores, idx = index.search(q_emb.reshape(1, -1), top_k)
+
+
+
+        #scores, idx = index.search(q_emb.reshape(1, -1), top_k)
         retrieved = idx[0]
         logger.info(f"Row {i}: Initial retrieved: {retrieved}")
 
         # Rerank top_k with cross-encoder
         logger.info(f"Row {i}: Reranking with cross-encoder...")
         rerank_inputs = [[row["question"], chunks[rid]] for rid in retrieved]
-        rerank_scores = reranker.predict(rerank_inputs)
+        #rerank_scores = reranker.predict(rerank_inputs)
+        rerank_scores = reranker.predict(rerank_inputs, batch_size=32)
+
         logger.info(f"Row {i}: Rerank scores: {rerank_scores}")
 
         # urutkan berdasarkan score cross encoder
         reranked = [retrieved[i] for i in np.argsort(rerank_scores)[::-1]]
         retrieved = np.array(reranked)
         logger.info(f"Row {i}: Final retrieved after reranking: {retrieved}")
-        
-    logger.info(f"[Row {i}] === RETRIEVED CHUNKS (Top-{top_k}) ===")
+        logger.info(f"[Row {i}] === RETRIEVED CHUNKS (Top-{top_k}) ===")
 
-    for rank_num, chunk_id in enumerate(retrieved, start=1):
-        logger.info(f"\n[Rank {rank_num}] Chunk ID: {chunk_id}")
-        logger.info(f"[Rank {rank_num}] TEXT:\n{chunks[chunk_id]}")
-
-        # ------------------------------------------------
-        # TEXT HIT K (exact + overlap + semantic similarities)
-        # ------------------------------------------------
-        # Pair: (chunk_id, chunk_text) untuk setiap retrieved
-        retrieved_pairs = [(rid, chunks[rid]) for rid in retrieved]
-
-        text_hit, exact_score, overlap_score, semantic_score = text_hit_match(
-            gt_text=gt_text,
-            retrieved_chunks=retrieved_pairs,
-            chunk_embs=chunk_embs,
-            gt_emb=gt_emb,
-            overlap_threshold=0.25,
-            semantic_threshold=0.80
-        )
-        logger.info(f"Row {i}: Text hit: {text_hit}, exact: {exact_score}, overlap: {overlap_score}, semantic: {semantic_score}")
-        logger.info(f"[Row {i}] FINAL TEXT_HIT@K = {text_hit}")
-        logger.info("------------------------------------------\n\n")
+        for rank_num, chunk_id in enumerate(retrieved, start=1):
+            logger.info(f"\n[Rank {rank_num}] Chunk ID: {chunk_id}")
+            logger.info(f"[Rank {rank_num}] TEXT:\n{short_text(chunks[chunk_id])}")
 
 
-        # ------------------------------------------------
-        # RANKING
-        # ------------------------------------------------
-        # sims_q = np.dot(chunk_embs, q_emb)
-        # rank_order = np.argsort(sims_q)[::-1]
-        # rank = int(np.where(rank_order == gt_chunk)[0][0]) + 1
-        # rr = 1 / rank
-        # logger.info(f"Row {i}: Rank: {rank}, RR: {rr}")
-        if gt_chunk in retrieved:
-            rank = list(retrieved).index(gt_chunk) + 1
-        else:
-            rank = top_k + 1
-        rr = 1.0 / rank
+            # ------------------------------------------------
+            # TEXT HIT K (exact + overlap + semantic similarities)
+            # ------------------------------------------------
+            # Pair: (chunk_id, chunk_text) untuk setiap retrieved
+            retrieved_pairs = [(rid, chunks[rid]) for rid in retrieved]
 
-        
-        # ------------------------------------------------
-        # CLUSTER-BASED HIT (CHUNK ±1)
-        # ------------------------------------------------
-        cluster = cluster_neighbors(gt_chunk, len(chunks), radius=1)
-        cluster_hit = int(any([rid in cluster for rid in retrieved]))
-        logger.info(f"Row {i}: Cluster hit: {cluster_hit}, cluster: {cluster}")
+            text_hit, exact_score, overlap_score, semantic_score = text_hit_match(
+                gt_text=gt_text,
+                retrieved_chunks=retrieved_pairs,
+                chunk_embs=chunk_embs,
+                gt_emb=gt_emb,
+                overlap_threshold=0.25,
+                semantic_threshold=0.80
+            )
+            logger.info(f"Row {i}: Text hit: {text_hit}, exact: {exact_score}, overlap: {overlap_score}, semantic: {semantic_score}")
+            logger.info(f"[Row {i}] FINAL TEXT_HIT@K = {text_hit}")
+            logger.info("------------------------------------------\n\n")
 
-        # ------------------------------------------------
-        # nDCG@K
-        # ------------------------------------------------
-        ndcg = ndcg_at_k(retrieved, gt_chunk, top_k)
-        logger.info(f"Row {i}: nDCG@K: {ndcg}")
 
-        # ------------------------------------------------
-        # SIMILARITY STATS
-        # ------------------------------------------------
-        topk_embs = chunk_embs[retrieved]
-        topk_sims = np.dot(topk_embs, q_emb)
-        logger.info(f"Row {i}: TopK sim max: {np.max(topk_sims)}, avg: {np.mean(topk_sims)}")
+            # ------------------------------------------------
+            # RANKING
+            # ------------------------------------------------
+            # sims_q = np.dot(chunk_embs, q_emb)
+            # rank_order = np.argsort(sims_q)[::-1]
+            # rank = int(np.where(rank_order == gt_chunk)[0][0]) + 1
+            # rr = 1 / rank
+            # logger.info(f"Row {i}: Rank: {rank}, RR: {rr}")
+            if gt_chunk in retrieved:
+                rank = list(retrieved).index(gt_chunk) + 1
+            else:
+                rank = top_k + 1
+            rr = 1.0 / rank
 
-        rows.append({
-            "id": row["id"],
-            "question": row["question"],
-            "groundtruth_context": gt_text,
-            "retrieved_chunks_text": " ||| ".join([chunks[rid] for rid in retrieved]),
-            "gt_chunk_id": gt_chunk + 1,
-            "retrieved_ids": [r + 1 for r in retrieved],
-            "hit_at_k": int(gt_chunk in retrieved),
-            "cluster_hit@k": cluster_hit,
-            "text_hit@k": text_hit,
+            
+            # ------------------------------------------------
+            # CLUSTER-BASED HIT (CHUNK ±1)
+            # ------------------------------------------------
+            cluster = cluster_neighbors(gt_chunk, len(chunks), radius=1)
+            cluster_hit = int(any([rid in cluster for rid in retrieved]))
+            logger.info(f"Row {i}: Cluster hit: {cluster_hit}, cluster: {cluster}")
 
-            # New detailed scores
-            "exact_score": exact_score,
-            "overlap_score": overlap_score,
-            "semantic_score": semantic_score,
+            # ------------------------------------------------
+            # nDCG@K
+            # ------------------------------------------------
+            ndcg = ndcg_at_k(retrieved, gt_chunk, top_k)
+            logger.info(f"Row {i}: nDCG@K: {ndcg}")
 
-            "rank": rank,
-            "rr": rr,
-            "ndcg@k": ndcg,
-            "topk_sim_max": float(np.max(topk_sims)),
-            "topk_sim_avg": float(np.mean(topk_sims)),
-        })
+            # ------------------------------------------------
+            # SIMILARITY STATS
+            # ------------------------------------------------
+            topk_embs = chunk_embs[retrieved]
+            topk_sims = np.dot(topk_embs, q_emb)
+            logger.info(f"Row {i}: TopK sim max: {np.max(topk_sims)}, avg: {np.mean(topk_sims)}")
+
+            rows.append({
+                "id": row["id"],
+                "question": row["question"],
+                "groundtruth_context": gt_text,
+                "retrieved_chunks_text": " ||| ".join([chunks[rid] for rid in retrieved]),
+                "gt_chunk_id": gt_chunk + 1,
+                "retrieved_ids": [r + 1 for r in retrieved],
+                "hit_at_k": int(gt_chunk in retrieved),
+                "cluster_hit@k": cluster_hit,
+                "text_hit@k": text_hit,
+
+                # New detailed scores
+                "exact_score": exact_score,
+                "overlap_score": overlap_score,
+                "semantic_score": semantic_score,
+
+                "rank": rank,
+                "rr": rr,
+                "ndcg@k": ndcg,
+                "topk_sim_max": float(np.max(topk_sims)),
+                "topk_sim_avg": float(np.mean(topk_sims)),
+            })
 
 
     logger.info("Creating results DataFrame...")

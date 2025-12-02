@@ -1,0 +1,37 @@
+2025-12-02 14:17:59 [INFO] Log file created at: results/retrieval/ret_20251202_141759/log_20251202_141759.log
+2025-12-02 14:17:59 [INFO] Starting main function
+2025-12-02 14:17:59 [INFO] Loaded config from configs/retrieval.yaml
+2025-12-02 14:17:59 [INFO] Master config: {'dataset': 'datasets/validated.xlsx', 'mode': 'retrieval', 'top_k': 10, 'device': 'cuda', 'pdf_dir': 'docs/'}
+2025-12-02 14:17:59 [INFO] Number of experiments: 16
+2025-12-02 14:17:59 [INFO] Loaded dataset from datasets/validated.xlsx, shape: (1819, 20)
+2025-12-02 14:17:59 [INFO] Ensured output directory: results/retrieval/ret_20251202_141759
+2025-12-02 14:17:59 [INFO] Processing experiment: FIX400_BGE_M3
+2025-12-02 14:17:59 [INFO] Experiment FIX400_BGE_M3 is active, proceeding
+2025-12-02 14:17:59 [INFO] Output directory for FIX400_BGE_M3: results/retrieval/ret_20251202_141759/FIX400_BGE_M3_20251202_141759
+2025-12-02 14:17:59 [INFO] 
+=== Running experiment FIX400_BGE_M3 ===
+2025-12-02 14:17:59 [INFO] Experiment config: {'id': 'FIX400_BGE_M3', 'active': True, 'chunking': {'type': 'fixed', 'size': 400, 'overlap': 80}, 'embedding': {'model': 'models/embedding/bge-m3'}}
+2025-12-02 14:17:59 [INFO] Master config: {'dataset': 'datasets/validated.xlsx', 'mode': 'retrieval', 'top_k': 10, 'device': 'cuda', 'pdf_dir': 'docs/'}
+2025-12-02 14:17:59 [INFO] Dataset shape: (1819, 20)
+2025-12-02 14:17:59 [INFO] Output dir: results/retrieval/ret_20251202_141759/FIX400_BGE_M3_20251202_141759
+2025-12-02 14:18:04 [INFO] Loaded CrossEncoder reranker
+2025-12-02 14:18:04 [INFO] [GPU] Cache cleared
+2025-12-02 14:18:04 [INFO] Load pretrained SentenceTransformer: models/embedding/bge-m3
+2025-12-02 14:18:06 [INFO] Loaded embedder: models/embedding/bge-m3
+2025-12-02 14:18:06 [INFO] Loading PDF/DOCX from folder: docs/
+2025-12-02 14:18:06 [INFO] Found 0 PDF files and 3 DOCX files
+2025-12-02 14:18:06 [INFO] Processing DOCX: docs/UX Interaction Testing.docx
+2025-12-02 14:18:06 [INFO] Extracted 681 paragraphs from docs/UX Interaction Testing.docx
+2025-12-02 14:18:06 [INFO] Processing DOCX: docs/The Guide To Usability Testing -id v3.docx
+2025-12-02 14:18:06 [INFO] Extracted 428 paragraphs from docs/The Guide To Usability Testing -id v3.docx
+2025-12-02 14:18:06 [INFO] Processing DOCX: docs/The Basics of User Experience Design -id.docx
+2025-12-02 14:18:06 [INFO] Extracted 340 paragraphs from docs/The Basics of User Experience Design -id.docx
+2025-12-02 14:18:06 [INFO] Combined text length: 309307 chars
+2025-12-02 14:18:06 [INFO] Loaded corpus text from docs/, length: 309307 chars
+2025-12-02 14:18:06 [INFO] Chunking text with method: fixed, config: {'type': 'fixed', 'size': 400, 'overlap': 80}
+2025-12-02 14:18:06 [INFO] Fixed chunking with size: 400, overlap: 80
+2025-12-02 14:18:06 [INFO] Fixed chunks: 130
+2025-12-02 14:18:06 [INFO] Chunked text into 130 chunks
+2025-12-02 14:18:06 [INFO] Starting chunk embedding...
+2025-12-02 14:18:10 [INFO] Chunk embeddings shape: (130, 1024)
+2025-12-02 14:18:10 [INFO] Starting question embedding...
