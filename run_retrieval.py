@@ -430,60 +430,59 @@ def ndcg_at_k(retrieved_ids, gt_id, k):
     ideal = 1  # because only one relevant item exists
     return dcg / ideal
 
+
+
+
 # ======================================================
 # TEXT-BASED HIT MATCHING (exact, overlap, semantic)
 # ======================================================
 def text_hit_match(
-    gt_text, 
-    retrieved_chunks, 
-    chunk_embs, 
-    gt_emb,
-    overlap_threshold=0.35,      # lebih ketat sedikit
-    semantic_threshold=0.90,     # balanced precision
-    exact_window=200             # batasi exact match
+    gt_atomiccgt,
+    retrieved_chunks,
+    eval_chunk_embs_map,
+    eval_gt_emb,
+    overlap_threshold,
+    semantic_threshold,
+    exact_window,
 ):
-    """
-    Versi balanced:
-    - Tidak boleh semantic-only hit
-    - Harus ada exact match kecil ATAU overlap tinggi
-    - Ditambah semantic similarity yang kuat
-    """
-
     best_exact = 0
     best_overlap = 0
     best_sim = 0
 
     for rid, chunk_text in retrieved_chunks:
 
-        # EXACT match ketat (hanya 200 karakter pertama)
+        # exact substring
         if (
-            gt_text[:exact_window].strip() in chunk_text
-            or chunk_text[:exact_window].strip() in gt_text
+            gt_atomiccgt[:exact_window].strip() in chunk_text
+            or chunk_text[:exact_window].strip() in gt_atomiccgt
         ):
             best_exact = 1
 
-        # OVERLAP
-        ov = token_overlap(gt_text, chunk_text)
+        # overlap
+        ov = token_overlap(gt_atomiccgt, chunk_text)
         best_overlap = max(best_overlap, ov)
 
-        # SEMANTIC
-        sim = float(np.dot(chunk_embs[rid], gt_emb))
+        # semantic sim
+        sim = float(np.dot(eval_chunk_embs_map[rid], eval_gt_emb))
         best_sim = max(best_sim, sim)
 
-    # 1) Semantic harus kuat
+    # BALANCED RULE
+    exact_ok = best_exact == 1 and len(gt_atomiccgt.split()) >= 5
     semantic_ok = best_sim >= semantic_threshold
+    overlap_ok = best_overlap >= overlap_threshold
 
-    # 2) Exact match kecil atau overlap lumayan
-    text_match_ok = (best_exact == 1) or (best_overlap >= overlap_threshold)
+    hit = 1 if (semantic_ok and (exact_ok or overlap_ok)) else 0
 
-    # FINAL HIT rule (balanced):
-    # - semantic kuat
-    # - ditambah exact OR overlap yang cukup
-    hit = 1 if (semantic_ok and text_match_ok) else 0
 
     return hit, best_exact, best_overlap, best_sim
 
 
+eval_embedder = SentenceTransformer(
+    "models/embedding/multilingual-e5-base",   # misalnya "intfloat/multilingual-e5-base"
+    device="cuda",                    # atau "cpu" kalau mau hemat
+    trust_remote_code=True
+)
+logger.info(f"Loaded EVAL embedder evaluasi (e5)")
 # ================================================
 # RETRIEVAL PIPELINE
 # ================================================
@@ -492,6 +491,8 @@ def text_hit_match(
 # ======================================================
 
 def run_retrieval(exp, master, df, out_dir):
+    
+    #setup_logging(auto_out(exp["id"]))
     logger.info(f"\n=== Running experiment {exp['id']} ===")
     logger.info(f"Experiment config: {exp}")
     logger.info(f"Master config: {master}")
@@ -537,6 +538,7 @@ def run_retrieval(exp, master, df, out_dir):
 
     logger.info("Starting ground truth embedding...")
     gt_embs = embedder.encode(df["context"].tolist(), normalize_embeddings=True, batch_size=64)
+    gt_acgtembs = embedder.encode(df["atomic_context_groundtruth"].tolist(), normalize_embeddings=True, batch_size=64)
     logger.info(f"Ground truth embeddings shape: {gt_embs.shape}")
 
     dim = chunk_embs.shape[1]
@@ -571,13 +573,15 @@ def run_retrieval(exp, master, df, out_dir):
         logger.info(f"Processing row {i+1}/{len(df)}: {row['id']}")
         q_emb = q_embs[i]
         gt_emb = gt_embs[i]
+        gt_acgt=gt_acgtembs[i]
         gt_text = row["context"]
+        gt_atomiccgt = row["atomic_context_groundtruth"]
         # === LOG: Question & GT Context ===
         logger.info("\n------------------------------------------")
         logger.info(f"[Row {i}] QUESTION:")
-        logger.info(row["question"])
+        logger.info(short_text(row["question"]))
         logger.info("\n[Row {i}] GROUNDTRUTH CONTEXT:")
-        logger.info(gt_text)
+        logger.info(short_text(gt_text))
         logger.info("------------------------------------------\n\n")
 
         # ------------------------------------------------
@@ -620,6 +624,21 @@ def run_retrieval(exp, master, df, out_dir):
         logger.info(f"Row {i}: Final retrieved after reranking: {retrieved}")
         logger.info(f"[Row {i}] === RETRIEVED CHUNKS (Top-{top_k}) ===")
 
+        eval_gt_acgt = eval_embedder.encode(
+            gt_atomiccgt,
+            normalize_embeddings=True
+        )
+
+        eval_retrieved_embs = eval_embedder.encode(
+            [chunks[rid] for rid in retrieved],
+            normalize_embeddings=True
+        )
+
+        # bikin mapping id → embedding untuk fungsi text_hit
+        eval_chunk_embs_map = {
+            rid: emb for rid, emb in zip(retrieved, eval_retrieved_embs)
+        }
+
         for rank_num, chunk_id in enumerate(retrieved, start=1):
             logger.info(f"\n[Rank {rank_num}] Chunk ID: {chunk_id}")
             logger.info(f"[Rank {rank_num}] TEXT:\n{short_text(chunks[chunk_id])}")
@@ -632,13 +651,15 @@ def run_retrieval(exp, master, df, out_dir):
             retrieved_pairs = [(rid, chunks[rid]) for rid in retrieved]
 
             text_hit, exact_score, overlap_score, semantic_score = text_hit_match(
-                gt_text=gt_text,
+                gt_atomiccgt=gt_atomiccgt,
                 retrieved_chunks=retrieved_pairs,
-                chunk_embs=chunk_embs,
-                gt_emb=gt_emb,
-                overlap_threshold=0.25,
-                semantic_threshold=0.80
+                eval_chunk_embs_map=eval_chunk_embs_map,
+                eval_gt_emb=eval_gt_acgt,
+                overlap_threshold=0.07,
+                semantic_threshold=0.80,
+                exact_window=15
             )
+
             logger.info(f"Row {i}: Text hit: {text_hit}, exact: {exact_score}, overlap: {overlap_score}, semantic: {semantic_score}")
             logger.info(f"[Row {i}] FINAL TEXT_HIT@K = {text_hit}")
             logger.info("------------------------------------------\n\n")
@@ -679,28 +700,28 @@ def run_retrieval(exp, master, df, out_dir):
             topk_sims = np.dot(topk_embs, q_emb)
             logger.info(f"Row {i}: TopK sim max: {np.max(topk_sims)}, avg: {np.mean(topk_sims)}")
 
-            rows.append({
-                "id": row["id"],
-                "question": row["question"],
-                "groundtruth_context": gt_text,
-                "retrieved_chunks_text": " ||| ".join([chunks[rid] for rid in retrieved]),
-                "gt_chunk_id": gt_chunk + 1,
-                "retrieved_ids": [r + 1 for r in retrieved],
-                "hit_at_k": int(gt_chunk in retrieved),
-                "cluster_hit@k": cluster_hit,
-                "text_hit@k": text_hit,
+        rows.append({
+            "id": row["id"],
+            "question": row["question"],
+            "atomic_cgt": gt_atomiccgt,
+            # "retrieved_chunks_text": " ||| ".join([chunks[rid] for rid in retrieved]),
+            "gt_chunk_id": gt_chunk + 1,
+            "retrieved_ids": [r + 1 for r in retrieved],
+            "hit_at_k": int(gt_chunk in retrieved),
+            "cluster_hit@k": cluster_hit,
+            "text_hit@k": text_hit,
 
-                # New detailed scores
-                "exact_score": exact_score,
-                "overlap_score": overlap_score,
-                "semantic_score": semantic_score,
+            # New detailed scores
+            "exact_score": exact_score,
+            "overlap_score": overlap_score,
+            "semantic_score": semantic_score,
 
-                "rank": rank,
-                "rr": rr,
-                "ndcg@k": ndcg,
-                "topk_sim_max": float(np.max(topk_sims)),
-                "topk_sim_avg": float(np.mean(topk_sims)),
-            })
+            "rank": rank,
+            "rr": rr,
+            "ndcg@k": ndcg,
+            "topk_sim_max": float(np.max(topk_sims)),
+            "topk_sim_avg": float(np.mean(topk_sims)),
+        })
 
 
     logger.info("Creating results DataFrame...")
@@ -876,6 +897,7 @@ def save_excel(exp_id, out_dir, df_res, chunks, summary, bloom_summary, heatmap_
         img_s = openpyxl.drawing.image.Image(scatter_path)
         img_s.anchor = "A1"
         ws_s.add_image(img_s)
+    format_excel(excel_path)
 
     logger.info(f"✔ Excel saved: {excel_path}")
 
@@ -947,10 +969,11 @@ def main():
     all_bloom = []
 
     df = pd.read_excel(master["dataset"])
+    df= df.head(20) # for testing only, remove this line for full dataset
     df = df[df["context"].str.strip() != ""]
 
     logger.info(f"Loaded dataset from {master['dataset']}, shape: {df.shape}")
-    #df= df.head(10)  # for testing only, remove this line for full dataset
+  # for testing only, remove this line for full dataset
     #df["atomic_context_groundtruth"] = df["atomic_context_groundtruth"].astype(str).apply(flatten_context)
     #logger.info("Applied flatten_context to context column")
 
@@ -969,6 +992,7 @@ def main():
 
         exp_id = exp["id"]
         out_dir = auto_out(exp_id)
+        setup_logging(out_dir)
         logger.info(f"Output directory for {exp_id}: {out_dir}")
 
         df_res, chunks, summary, bloom_summary, sim_matrix, index, chunk_embs = run_retrieval(exp, master, df, out_dir)

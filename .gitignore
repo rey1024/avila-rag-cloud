@@ -53,3 +53,12 @@ Thumbs.db
 
 old/
 old/*
+
+results/
+results/*
+temp/
+temp/*
+outputsRetrieval/
+outputsRetrieval/*
+outputGen/
+outputGen/*
