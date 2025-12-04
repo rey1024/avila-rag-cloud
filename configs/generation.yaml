@@ -1,7 +1,7 @@
 master:
-  dataset: "dataset_evaluation/validation_20251124_101649.xlsx"
+  dataset: "datasets/validated-02122025.xlsx"
   mode: "generation"
-  faiss_index_dir: "outputsRetrieval/20251125_083908/SEM_E5_20251125_083908/faiss"
+  faiss_index_dir: "datasets/faiss-e5"
   top_k: 10
   device: "cuda"
   pdf_dir: "docs/"
@@ -18,7 +18,7 @@ experiments:
   # GPT 
   # =====================================================
   - id: GEN_GPT4oMini
-    active: true
+    active: false
     llm:
       provider: "openai"
       model: "gpt-4o-mini"
@@ -29,7 +29,7 @@ experiments:
   # GEMMA 7B INSTRUCT
   # =====================================================
   - id: GEN_GEMMA_7B
-    active: true
+    active: false
     llm:
       provider: "ollama"
       model: "gemma:7b-instruct"
@@ -53,7 +53,7 @@ experiments:
   # PHI 3 MEDIUM
   # =====================================================
   - id: GEN_PHI3_MEDIUM
-    active: true
+    active: false
     llm:
       provider: "ollama"
       model: "phi3:medium"

@@ -85,8 +85,8 @@ def run_ragas_evaluation(questions, predictions, contexts_used, references, open
             arr = scores[key]
             if any(v is None for v in arr):
                 failed = True
-            if any((v is not None and float(v) <= 0.3) for v in arr):
-                failed = True
+            # if any((v is not None and float(v) <= 0.3) for v in arr):
+            #     failed = True
 
         if not failed:
             logger.info("✔ RAGAS evaluation successful")

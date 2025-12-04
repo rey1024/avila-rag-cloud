@@ -8,6 +8,8 @@ import pandas as pd
 from pathlib import Path
 from datetime import datetime
 
+from openpyxl import load_workbook
+from openpyxl.styles import Alignment
 
 from sentence_transformers import SentenceTransformer, util
 import torch
@@ -139,9 +141,7 @@ def load_eval_dataset(path):
     df = pd.read_excel(path)
     
    # Ambil 5 teratas dan 5 terbawah
-    df_top = df.head(2)
-    df_bottom = df.tail(2)
-    df = pd.concat([df_top, df_bottom], ignore_index=True)
+#
 
     #df = df[df["id"] == 2].copy()
 
@@ -150,7 +150,7 @@ def load_eval_dataset(path):
 
     #ambil sample masing2 dari bloomlevel
     
-    required = ["id", "context", "question", "answer", "bloomlevel"]
+    required = ["id", "context", "question", "answer_groundtruth", "bloom_level"]
     for c in required:
         if c not in df:
             raise ValueError(f"Kolom {c} tidak ada di dataset evaluasi")
@@ -172,8 +172,8 @@ def load_eval_dataset(path):
             "id": r["id"],
             "context": r["context"],
             "question": r["question"],
-            "groundtruth_answer": r["answer"],
-            "bloomlevel": r["bloomlevel"]
+            "answer_groundtruth": r["answer_groundtruth"],
+            "bloom_level": r["bloom_level"]
         })
 
 
@@ -244,7 +244,7 @@ def save_excel_report(
     df_items["context_recall"] = [x["context_recall"] for x in ragas_scores_item]
     df_items["answer_relevancy"] = [x["answer_relevancy"] for x in ragas_scores_item]
     df_items["faithfulness"] = [x["faithfulness"] for x in ragas_scores_item]
-    df_items["answer_correctness"] = [x["answer_correctness"] for x in ragas_scores_item]
+#    df_items["answer_correctness"] = [x["answer_correctness"] for x in ragas_scores_item]
 
     df_items["retrieval_hit"] = retrieval_hits
     df_items["gt_chunk_id"] = gt_chunk_ids
@@ -304,7 +304,7 @@ def save_excel_report(
     nearest_bloom = []
     for i in range(sim_mat.shape[0]):
         j = np.argmax(sim_mat[i])  # context yang paling mirip
-        nearest_bloom.append(df_source["bloomlevel"].iloc[j])
+        nearest_bloom.append(df_source["bloom_level"].iloc[j])
 
     df_chunks["nearest_bloom"] = nearest_bloom
     # ============================================================
@@ -462,6 +462,46 @@ def save_excel_report(
     print(f"✔ Excel tersimpan: {excel_path}")
     return excel_path
 
+def format_excel(xlsx_path):
+    """
+    Menerapkan formatting seperti save_excel_report()
+    - Freeze baris pertama
+    - Wrap text
+    - Vertical top align
+    - Auto column width (max 80)
+    """
+
+    wb = load_workbook(xlsx_path)
+
+    for sheet_name in wb.sheetnames:
+        ws = wb[sheet_name]
+
+        # Freeze baris pertama
+        ws.freeze_panes = "A2"
+
+        # Wrap text + alignment
+        for row in ws.iter_rows():
+            for cell in row:
+                cell.alignment = Alignment(
+                    wrap_text=True,
+                    vertical="top",
+                    horizontal="left"
+                )
+
+        # Auto width
+        for col in ws.columns:
+            max_length = 0
+            col_letter = col[0].column_letter
+
+            for cell in col:
+                v = str(cell.value) if cell.value is not None else ""
+                if len(v) > max_length:
+                    max_length = len(v)
+
+            ws.column_dimensions[col_letter].width = min(max_length + 3, 80)
+
+    wb.save(xlsx_path)
+    print(f"✔ Format Excel selesai: {xlsx_path}")
 
 def load_pdf_texts(pdf_dir):
     import pypdf
@@ -517,7 +557,7 @@ def save_global_summary(summary_dict, timestamp):
             "context_recall": scores.get("context_recall", 0),
             "answer_relevancy": scores.get("answer_relevancy", 0),
             "faithfulness": scores.get("faithfulness", 0),
-            "answer_correctness": scores.get("answer_correctness", 0),
+            #"answer_correctness": scores.get("answer_correctness", 0),
             "output_dir": info["output_dir"],
             "excel_file": info["excel"]
         })

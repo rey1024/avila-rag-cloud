@@ -14,9 +14,9 @@ import pandas as pd
 from pathlib import Path
 from datetime import datetime
 
+from openpyxl import load_workbook
 
-from sentence_transformers import SentenceTransformer, util
-import torch
+
 
 from datasets import Dataset
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
@@ -128,12 +128,17 @@ def run_generation(exp, master, timestamp):
     # Pre encode semua chunks untuk diagnostics
     from sentence_transformers import util
     logging.info("• Pre-encoding all chunks for diagnostics...")
-    chunk_embs = embedder.encode(
-        chunks,
-        normalize_embeddings=True,
-        batch_size=8,           # aman untuk GPU 10 GB
-        convert_to_numpy=True
-    )
+    if os.path.exists("cache/chunk_embs.npy"):
+        chunk_embs = np.load("cache/chunk_embs.npy")
+        logging.info("✔ Loaded chunk_embs dari cache/chunk_embs.npy")
+    else:
+        logging.info("  → Tidak ditemukan cache, melakukan encoding ulang...")
+        chunk_embs = embedder.encode(
+            chunks,
+            normalize_embeddings=True,
+            batch_size=8,           # aman untuk GPU 10 GB
+            convert_to_numpy=True
+        )
     logging.info("✔ Pre-encoding done")
     log_var("chunk_embs_shape", chunk_embs.shape)
 
@@ -145,6 +150,8 @@ def run_generation(exp, master, timestamp):
     # Penjelasan singkat: LOOP 1 melakukan retrieval (FAISS -> rerank),
     # menghitung diagnostic similarity, dan menyimpan konteks untuk tiap item.
     logging.info("Penjelasan: LOOP 1 = retrieval + diagnostics (tidak ada pemanggilan LLM).")
+    logging.info(f"Columns: {df_source.columns.tolist()}")
+    logging.info(f"sample data item: {data[0]}")
 
     # =====================================================
     # LOOP 1: hanya retrieval dan diagnostics, TANPA LLM
@@ -154,7 +161,7 @@ def run_generation(exp, master, timestamp):
         logging.info(f"\n############## Memproses item {idx}/{total_items}")
 
         q      = item["question"]
-        gt     = item["groundtruth_answer"]
+        gt     = item["answer_groundtruth"]
         #gt_ctx = find_gt_chunk(gt, chunks, embedder)
 
         gt_ctx = item["context"]
@@ -177,6 +184,11 @@ def run_generation(exp, master, timestamp):
         # Step 2: Rerank dengan BGE atau Jina
         retrieved = rerank_bge(q, faiss_top10, top_k=2)
         log_var("retrieved_after_rerank", retrieved)
+        if len(retrieved) == 0:
+            logging.info(f"[RETRIEVAL] Item {idx} retrieved chunk = 0")
+            logging.info(f"Q: {q}")
+            logging.info(f"FAISS top10: {faiss_top10}")
+
         # atau
         # retrieved = rerank_jina(q, faiss_top10, top_k=3)
 
@@ -257,7 +269,7 @@ def run_generation(exp, master, timestamp):
             q         = questions[i]
 
             safe_ctx  = safe_join_context(retrieved, max_tokens=6000)
-            bloom = data[i]["bloomlevel"]
+            bloom = data[i]["bloom_level"]
             prompt = build_prompt(safe_ctx, q, bloom)
 
             # logging per-prompt
@@ -292,22 +304,47 @@ def run_generation(exp, master, timestamp):
 
 
             print(f"  → GPT mode generate item {i}/{total_items}: prompt_len={len(safe_ctx)}")
-            ans = llm_generate_single(safe_ctx, q, data[i]["bloomlevel"])
+            ans = llm_generate_single(safe_ctx, q, data[i]["bloom_level"])
 
             log_var("prediction_preview", str(ans)[:300])
             predictions.append(ans)
+    # =====================================================
+    #  LLM generation selesai → SIMPAN DULU KE EXCEL
+    # =====================================================
+
+    df_llm = pd.DataFrame({
+        "id": [d["id"] for d in data],
+        "question": questions,
+        "llm_answer": predictions,
+        "reference": references,
+        "contexts_used": [ "\n".join(ctx) for ctx in contexts_used ],
+        "bloom_level": [d["bloom_level"] for d in data]
+    })
+
+    filename_v1 = f"outputGen/Gen{timestamp}/{exp['id']}-v1-llmAnswer.xlsx"
+    os.makedirs(f"outputGen/Gen{timestamp}", exist_ok=True)
+
+    df_llm.to_excel(filename_v1, index=False)
+    format_excel(filename_v1)
+    logging.info(f"✔ Saved intermediate LLM answers to {filename_v1}")
+    print(f"✔ Saved LLM-only results: {filename_v1}")
 
     # =====================================================
     # RAGAS
     # =====================================================
-    from utils_generation.eval_ragas import run_ragas_evaluation
+    from utils_generation.eval_ragas_async import run_ragas_evaluation
 
     logging.info("Menjalankan RAGAS evaluation...")
+    contexts_used_ragas = [
+        ctx
+        for ctx in contexts_used
+    ]
+
 
     ragas_item, ragas_agg = run_ragas_evaluation(
         questions=questions,
         predictions=predictions,
-        contexts_used=contexts_used,
+        contexts_used=contexts_used_ragas,
         references=references,
         openai_key=os.getenv("OPENAI_API_KEY")
     )
