@@ -118,10 +118,6 @@ def run_ragas_evaluation(questions, predictions, contexts_used, references, open
         logger.info("\n==============================")
         logger.info(f"Item {i+1}/{total}")
         logger.info("==============================")
-        logger.info(f"Question       : {questions[i]}")
-        logger.info(f"Answer         : {predictions[i]}")
-        logger.info(f"Ground Truth   : {references[i]}")
-        logger.info(f"Contexts       : {contexts_used[i]}")
         logger.info("--- Skor ---")
         for k, v in item_scores.items():
             logger.info(f"  {k:20s}: {v}")
@@ -145,3 +141,6 @@ def run_ragas_evaluation(questions, predictions, contexts_used, references, open
     logger.info("\n✔ Evaluasi RAGAS selesai.\n")
 
     return ragas_item, ragas_agg
+
+def run_ragas_evaluation(*args, **kwargs): 
+    return asyncio.run(run_ragas_evaluation_async(*args, **kwargs))

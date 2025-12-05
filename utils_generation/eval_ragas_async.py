@@ -12,8 +12,8 @@ from ragas.metrics.collections import (
 )
 
 from ragas.dataset_schema import SingleTurnSample
-from ragas.metrics import NonLLMContextRecall   # opsional
-from ragas.metrics import LLMContextRecall       # sesuai contoh
+from ragas.metrics import NonLLMContextRecall
+from ragas.metrics import LLMContextRecall
 
 from langchain_openai import ChatOpenAI
 import logging
@@ -24,7 +24,9 @@ import time
 logger = logging.getLogger(__name__)
 
 
+# =========================================================
 # Heartbeat
+# =========================================================
 def start_heartbeat():
     def hb():
         while True:
@@ -40,9 +42,9 @@ def fmt(v, d=3):
         return 0.0
 
 
-# ============================================================
-# 1. Evaluasi satu sample (mengikuti EXACT contoh Anda)
-# ============================================================
+# =========================================================
+# Evaluasi satu item
+# =========================================================
 async def run_single_sample(ds, i, llm_ragas, embeddings, evaluator_llm):
 
     q  = ds["question"][i]
@@ -50,14 +52,8 @@ async def run_single_sample(ds, i, llm_ragas, embeddings, evaluator_llm):
     gt = ds["ground_truth"][i]
     ctx = ds["contexts"][i]
 
-    # pastikan konteks list[string]
-    if isinstance(ctx, list):
-        if len(ctx) > 0 and isinstance(ctx[0], dict):
-            ctx = [c["text"] for c in ctx]
-    else:
-        ctx = [str(ctx)]
+    
 
-    # SingleTurnSample mengikuti spesifikasi contoh
     sample = SingleTurnSample(
         user_input=q,
         response=r,
@@ -65,27 +61,23 @@ async def run_single_sample(ds, i, llm_ragas, embeddings, evaluator_llm):
         retrieved_contexts=ctx
     )
 
-    # METRIC sesuai contoh Anda
-    CP = await ContextPrecision(llm=llm_ragas).ascore(
-        user_input=q,
-        reference=gt,
-        retrieved_contexts=ctx
-    )
+    try:
+        CP = await ContextPrecision(llm=llm_ragas).ascore(
+            user_input=q, reference=gt, retrieved_contexts=ctx
+        )
 
-    AR = await AnswerRelevancy(llm=llm_ragas, embeddings=embeddings).ascore(
-        user_input=q,
-        response=r
-    )
+        AR = await AnswerRelevancy(llm=llm_ragas, embeddings=embeddings).ascore(
+            user_input=q, response=r
+        )
 
-    F = await Faithfulness(llm=llm_ragas).ascore(
-        user_input=q,
-        response=r,
-        retrieved_contexts=ctx
-    )
+        F = await Faithfulness(llm=llm_ragas).ascore(
+            user_input=q, response=r, retrieved_contexts=ctx
+        )
 
-    #CR = await LLMContextRecall(llm=evaluator_llm).single_turn_ascore(sample)
-    CR = await NonLLMContextRecall().single_turn_ascore(sample)
-    
+        CR = await LLMContextRecall(llm=evaluator_llm).single_turn_ascore(sample)
+        #CR=10
+    except Exception as e:
+        raise RuntimeError(f"Metric error: {e}")
 
     return {
         "context_precision": float(CP.value),
@@ -95,12 +87,16 @@ async def run_single_sample(ds, i, llm_ragas, embeddings, evaluator_llm):
     }
 
 
-# ============================================================
-# 2. Evaluasi seluruh dataset (async)
-# ============================================================
+# =========================================================
+# Evaluasi SEQUENTIAL
+# =========================================================
 async def run_ragas_evaluation_async(questions, predictions, contexts_used, references, openai_key):
 
     start_heartbeat()
+
+    logger.info("\n==============================")
+    logger.info("📊  RAGAS Evaluation Started (Sequential Mode)")
+    logger.info("==============================\n")
 
     client = AsyncOpenAI(api_key=openai_key)
 
@@ -121,55 +117,73 @@ async def run_ragas_evaluation_async(questions, predictions, contexts_used, refe
     }
 
     total = len(questions)
+    results = []
 
-    # ======================================================
-    # ✔ SEMAPHORE: batas maksimal 5 task paralel
-    # ======================================================
-    sema = asyncio.Semaphore(5)
-
-    logger.info(f"[RAGAS] Parallel evaluation dimulai. Limit concurrency = 5")
-
-    tasks = []
     for i in range(total):
 
-        # flatten context
-        raw_ctx = ds["contexts"][i]
-        if isinstance(raw_ctx, list):
-            if len(raw_ctx) > 0 and isinstance(raw_ctx[0], list):
-                raw_ctx = [c for sub in raw_ctx for c in sub]
+        q = ds["question"][i]
+        r = ds["answer"][i]
+        ctx = ds["contexts"][i]
+
+        # fallback prevent error
+        if not ctx or len(ctx) == 0:
+            logger.warning(f"[RAGAS] Context kosong item {i+1}, menggunakan fallback")
+            ctx = ["No context retrieved"]
+            ds["contexts"][i] = ctx
+
+        logger.info("----------------------------------------------")
+        logger.info(f"[RAGAS] ▶ Evaluasi item {i+1}/{total}")
+        logger.info("----------------------------------------------")
+        logger.info(f"  • Pertanyaan     : {q[:80]}...")
+        logger.info(f"  • Jawaban LLM    : {r[:80]}...")
+        logger.info(f"  • Jumlah konteks : {len(ctx)}")
+
+                # ===========================================================
+        # Tambahkan log konteks (preview)
+        # ===========================================================
+        if isinstance(ctx, list):
+            if len(ctx) == 1:
+                preview = ctx[0][:150].replace("\n", " ")
+                logger.info(f"  • Context Sample : {preview}...")
+            else:
+                p1 = ctx[0][:150].replace("\n", " ")
+                logger.info(f"  • Context 1      : {p1}...")
+
+                if len(ctx) > 1:
+                    p2 = ctx[1][:150].replace("\n", " ")
+                    logger.info(f"  • Context 2      : {p2}...")
         else:
-            raw_ctx = [str(raw_ctx)]
-        ds["contexts"][i] = raw_ctx
+            preview = str(ctx)[:150].replace("\n", " ")
+            logger.info(f"  • Context Sample : {preview}...")
 
-        # ======================================================
-        # ✔ SETIAP TASK DIBUNGKUS DENGAN semaphore
-        # ======================================================
-        async def task_wrapper(i=i):
-            async with sema:
-                logger.info(f"[RAGAS] ▶ Memulai task {i+1}/{total} (slot semaphore aktif)")
-                return await run_single_sample(ds, i, llm_ragas, embeddings, evaluator_llm)
+        # ==========================================================
 
-        tasks.append(task_wrapper())
+        t0 = time.time()
 
-    # jalankan seluruh tasks paralel
-    raw_results = await asyncio.gather(*tasks, return_exceptions=True)
+        try:
+            metric = await run_single_sample(ds, i, llm_ragas, embeddings, evaluator_llm)
+        except Exception as e:
+            logger.error(f"[RAGAS] ❌ Error item {i+1}: {e}")
+            metric = {
+                "context_precision": 0.0,
+                "context_recall": 0.0,
+                "answer_relevancy": 0.0,
+                "faithfulness": 0.0,
+            }
 
-    # post processing
-    results = []
-    for i, item in enumerate(raw_results):
-        if isinstance(item, Exception):
-            logger.error(f"[RAGAS] ❌ Error item {i+1}: {item}")
-            results.append({
-                "context_precision": 0,
-                "context_recall": 0,
-                "answer_relevancy": 0,
-                "faithfulness": 0,
-            })
-        else:
-            logger.info(f"[RAGAS] ✔ Item {i+1} selesai parallel")
-            results.append(item)
+        dt = time.time() - t0
 
-    # aggregate
+        logger.info(f"[RAGAS] ✔ Selesai item {i+1} dalam {dt:.2f} s")
+        logger.info(f"        Context Precision : {fmt(metric['context_precision'])}")
+        logger.info(f"        Context Recall    : {fmt(metric['context_recall'])}")
+        logger.info(f"        Answer Relevancy  : {fmt(metric['answer_relevancy'])}")
+        logger.info(f"        Faithfulness      : {fmt(metric['faithfulness'])}")
+
+        results.append(metric)
+
+    # =====================================================
+    # AGGREGATE
+    # =====================================================
     ragas_agg = {
         k: fmt(np.mean([r[k] for r in results]))
         for k in results[0].keys()
@@ -177,20 +191,15 @@ async def run_ragas_evaluation_async(questions, predictions, contexts_used, refe
 
     logger.info("\n==============================")
     logger.info("📈  RAGAS Aggregate Scores")
-    logger.info("==============================\n")
+    logger.info("==============================")
     for k, v in ragas_agg.items():
         logger.info(f"{k:20s}: {v}")
 
     return results, ragas_agg
 
-# wrapper synchronous
-def run_ragas_evaluation(questions, predictions, contexts_used, references, openai_key):
-    return asyncio.run(
-        run_ragas_evaluation_async(
-            questions,
-            predictions,
-            contexts_used,
-            references,
-            openai_key
-        )
-    )
+
+# =========================================================
+# Wrapper sync
+# =========================================================
+def run_ragas_evaluation(*args, **kwargs):
+    return asyncio.run(run_ragas_evaluation_async(*args, **kwargs))
